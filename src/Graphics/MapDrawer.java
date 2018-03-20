@@ -1,5 +1,6 @@
 package Graphics;
 
+import static java.lang.Math.sin;
 import java.util.ArrayList;
 import javafx.scene.Group;
 import javafx.scene.Parent;
@@ -25,7 +26,7 @@ public class MapDrawer extends Parent{
     //an arraylist containing the data needed to build a the map
     private ArrayList<Surface> mapData = new ArrayList<>();
     //rotation points for the 3D Camera
-    private Rotate xAxis = new Rotate(350, Rotate.X_AXIS);
+    private Rotate xAxis = new Rotate(330, Rotate.X_AXIS);
     private Rotate yAxis = new Rotate(0, Rotate.Y_AXIS);
     private Rotate zAxis = new Rotate(0, Rotate.Z_AXIS);
     
@@ -89,6 +90,7 @@ public class MapDrawer extends Parent{
                     box.setTranslateX(boxMesh.getWidth()/2 + surface.getX());
                     box.setTranslateZ(boxMesh.getDepth()/2 + surface.getZ());
                     box.setTranslateY(- Y);
+                    surface.setY(Y);
                     root.getChildren().add(box);
                     break;
                 case GRASS_UP:
@@ -113,7 +115,7 @@ public class MapDrawer extends Parent{
         camera = new PerspectiveCamera(true);
         //add transformations to camera
         camera.getTransforms().addAll(
-                xAxis, yAxis, zAxis, new Translate(7.5, -7.5, -45));
+                xAxis, yAxis, zAxis, new Translate(7.5, -7.5, -35));
         
         root.getChildren().add(camera);
         
@@ -126,10 +128,10 @@ public class MapDrawer extends Parent{
      * Example method with example data for map1
      */
     public void addSomeData(){
-        mapData.add(new Surface(SurfaceType.GRASS, 15.0, 7.5, 0.0, 0.0));
-        mapData.add(new Surface(SurfaceType.WATER, 5.0, 2.5, 7.0, 5.0));
-        mapData.add(new Surface(SurfaceType.GRASS_UP, 15.0, 10.0, 0, 7.5, 30.0));
-        mapData.add(new Surface(SurfaceType.SAND, 15.0, 7.5, 0, 16.19));
+        mapData.add(new Surface(SurfaceType.GRASS, 10.0, 7.5, 0.0, 0.0, 0.0));
+        mapData.add(new Surface(SurfaceType.WATER, 5.0, 7.5, 10.0, 0.0, 0.0));
+        mapData.add(new Surface(SurfaceType.GRASS_UP, 15.0, 10.0, 0.0, 0.0, 7.5, 30.0));
+        mapData.add(new Surface(SurfaceType.SAND, 15.0, 7.5, 0, 0.0, 16.19));
     }
     /**
      * Zoom in and out
@@ -137,7 +139,6 @@ public class MapDrawer extends Parent{
      */
     public void CameraZoom(double value){
         camera.setTranslateZ(-35 + value);
-        System.out.println(camera.getTranslateZ());
     }
     /**
      * Rotate camera around X axis
@@ -171,5 +172,41 @@ public class MapDrawer extends Parent{
      */
     public double[] getTrajectory(){
         return new double[]{ball.getTranslateX(), ball.getTranslateY(), ball.getTranslateZ() + 5.0};
+    }
+    //idea
+    public void detectSurface(){
+        for(Surface surface: mapData){
+            switch(surface.getSurfaceType()){
+                case EMPTY:
+                case GRASS:
+                case SAND:
+                case WATER:
+                    if(ball.getTranslateZ() >= surface.getZ() &&
+                            ball.getTranslateZ() < surface.getZ() + surface.getLength() &&
+                            ball.getTranslateX() >= surface.getX() &&
+                            ball.getTranslateX() < surface.getX() + surface.getWidth()){
+                        double YCoordinate = (surface.getLength()*sin(surface.getAngle()))/sin(90.0 - surface.getAngle());
+                        ball.setTranslateY(-YCoordinate - ball.getRadius() - 1.0);
+                        System.out.println(surface.getSurfaceType());
+                    }
+                    break;
+                case GRASS_UP:
+                case GRASS_DOWN:
+                case SAND_UP:
+                case SAND_DOWN:
+                    Prism triangleMesh = new Prism((float)surface.getWidth(), (float)surface.getLength(), (float)surface.getAngle());
+                    if(ball.getTranslateZ() >= surface.getZ() &&
+                            ball.getTranslateZ() < surface.getZ() + triangleMesh.getDepth() &&
+                            ball.getTranslateX() >= surface.getX() &&
+                            ball.getTranslateX() < surface.getX() + surface.getWidth()){
+                        double YCoordinate = (ball.getTranslateZ()*sin(surface.getAngle()))/(sin(90.0 - surface.getAngle()));
+                        ball.setTranslateY(-YCoordinate - ball.getRadius() - 1.0);
+                        System.out.println(ball.getTranslateY());
+                        System.out.println(surface.getSurfaceType());
+                    }
+                    break;
+            }
+            
+        }
     }
 }

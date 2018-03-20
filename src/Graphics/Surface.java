@@ -18,6 +18,7 @@ public class Surface {
     private double length;
     private double angle;
     private double XCoordinate;
+    private double YCoordinate;
     private double ZCoordinate;
     /**
      * Constructor for boxes -  will create an instance of a surface with different data.
@@ -27,12 +28,13 @@ public class Surface {
      * @param X - starting coordinate x
      * @param Z  - starting coordinate z
      */
-    public Surface(SurfaceType surfaceType, double width, double length, double X, double Z){
+    public Surface(SurfaceType surfaceType, double width, double length, double X, double Y, double Z){
         this.surfaceType = surfaceType;
         this.width = width;
         this.length = length;
         angle = 0;
         XCoordinate = X;
+        YCoordinate = Y;
         ZCoordinate = Z;
         //add some more data
         switch(surfaceType){
@@ -56,12 +58,13 @@ public class Surface {
      * @param Z  - starting coordinate z
      * @param angle - tilted angle of surface of prism
      */
-    public Surface(SurfaceType surfaceType, double width, double length, double X, double Z, double angle){
+    public Surface(SurfaceType surfaceType, double width, double length, double X, double Y, double Z, double angle){
         this.surfaceType = surfaceType;
         this.width = width;
         this.length = length;
         this.angle = angle;
         XCoordinate = X;
+        YCoordinate = Y;
         ZCoordinate = Z;
         switch(surfaceType){
             case GRASS_UP:
@@ -82,6 +85,17 @@ public class Surface {
     }
     /**
      * @return Y coordinate
+     */
+    public double getY(){
+        return YCoordinate;
+    }
+    //testing
+    public void setY(double Y){
+        YCoordinate = Y;
+    }
+    /**
+     * 
+     * @return Z coordinate 
      */
     public double getZ(){
         return ZCoordinate;

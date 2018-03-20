@@ -11,9 +11,11 @@ import javafx.scene.input.KeyEvent;
  */
 public class CameraController implements EventHandler<KeyEvent>{
     private MapDrawer map;
+    
     private double angleY = 0;
     private double angleX = 0;
     private double angleZ = 0;
+    
     private double zoom = 0;
     /**
      * Constructor takes as a parameter the MapDrawer so it can call methods in it
@@ -44,21 +46,38 @@ public class CameraController implements EventHandler<KeyEvent>{
             angleX-= 10;
             map.rotateX(angleX);
         }
-        else if(event.getCode() == KeyCode.Q){
+        else if(event.getCode() == KeyCode.Z){
             angleZ+= 10;
             map.rotateZ(angleZ);
         }
-        else if(event.getCode() == KeyCode.W){
+        else if(event.getCode() == KeyCode.X){
             angleZ-= 10;
             map.rotateZ(angleZ);
         }
         else if(event.getCode() == KeyCode.N){
-            zoom+= 10;
+            zoom+= 1;
             map.CameraZoom(zoom);
         }
         else if(event.getCode() == KeyCode.M){
-            zoom-= 10;
+            zoom-= 1;
             map.CameraZoom(zoom);
+        }
+        
+        else if(event.getCode() == KeyCode.W){
+            map.getBall().setTranslateZ(map.getBall().getTranslateZ() + 0.5);
+            map.detectSurface();
+        }
+        else if(event.getCode() == KeyCode.S){
+            map.getBall().setTranslateZ(map.getBall().getTranslateZ() - 0.5);
+            map.detectSurface();
+        }
+        else if(event.getCode() == KeyCode.A){
+            map.getBall().setTranslateX(map.getBall().getTranslateX() + 0.5);
+            map.detectSurface();
+        }
+        else if(event.getCode() == KeyCode.D){
+            map.getBall().setTranslateX(map.getBall().getTranslateX() - 0.5);
+            map.detectSurface();
         }
     }    
 }
