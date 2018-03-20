@@ -38,7 +38,7 @@ public class MiniGolf extends Application {
         
         //Create a scene from pane, with dimensions, 1000 and 900. The rest is
         //needed for the 3D Graphics and rotations, because otherwise, the way things are seen changes.
-        Scene scene = new Scene(pane, 1000, 900, true, SceneAntialiasing.BALANCED);
+        Scene scene = new Scene(pane, 750, 600, true, SceneAntialiasing.BALANCED);
         //Add an EventFilter to the Scene with options for moving the camera
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new CameraController(map));
         
