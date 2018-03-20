@@ -120,7 +120,7 @@ public class MapDrawer extends Parent{
         root.getChildren().add(camera);
         
         //create a subscene for where the actual game will be represented
-        SubScene subScene = new SubScene(root, 800, 800, true, SceneAntialiasing.BALANCED);
+        SubScene subScene = new SubScene(root, 500, 500, true, SceneAntialiasing.BALANCED);
         subScene.setCamera(camera);
         getChildren().add(subScene);
     }

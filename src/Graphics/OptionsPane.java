@@ -7,6 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -57,23 +58,14 @@ public class OptionsPane extends GridPane{
         
         pane.setTop(forceText);
         pane.setAlignment(forceText, Pos.CENTER);
-        
-        Label zero = new Label("0");
-        zero.setFont(new Font("Arial", 11));
-        
-        pane.setLeft(zero);
-        
-        pane.setAlignment(zero, Pos.CENTER);
-        
-        Label hundred = new Label("100");
-        hundred.setFont(new Font("Arial", 11));
-        
-        pane.setRight(hundred);
-        pane.setAlignment(hundred, Pos.CENTER);
-        
-        Rectangle force = new Rectangle(100, 50);
-        force.setFill(Color.RED);
-        
+
+        Slider force = new Slider(0,100,50);
+        force.setShowTickLabels(true);
+        force.setShowTickMarks(true);
+        force.setMajorTickUnit(50);
+        force.setMinorTickCount(5);
+        force.setBlockIncrement(5);
+
         pane.setCenter(force);
         pane.setMargin(force, new Insets(12,12,12,12));
         
