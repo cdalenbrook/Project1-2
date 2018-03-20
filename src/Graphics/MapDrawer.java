@@ -185,8 +185,9 @@ public class MapDrawer extends Parent{
                             ball.getTranslateZ() < surface.getZ() + surface.getLength() &&
                             ball.getTranslateX() >= surface.getX() &&
                             ball.getTranslateX() < surface.getX() + surface.getWidth()){
-                        double YCoordinate = (surface.getLength()*sin(surface.getAngle()))/sin(90.0 - surface.getAngle());
-                        ball.setTranslateY(-YCoordinate - ball.getRadius() - 1.0);
+                        double YCoordinate = ((ball.getTranslateZ() - surface.getZ())*sin(Math.toRadians(surface.getAngle())))/(sin(Math.toRadians(90.0 - surface.getAngle())));
+                        ball.setTranslateY(-YCoordinate - ball.getRadius() - 1.0 - surface.getY());
+                        System.out.println(ball.getTranslateY());
                         System.out.println(surface.getSurfaceType());
                     }
                     break;
@@ -199,8 +200,9 @@ public class MapDrawer extends Parent{
                             ball.getTranslateZ() < surface.getZ() + triangleMesh.getDepth() &&
                             ball.getTranslateX() >= surface.getX() &&
                             ball.getTranslateX() < surface.getX() + surface.getWidth()){
-                        double YCoordinate = (ball.getTranslateZ()*sin(surface.getAngle()))/(sin(90.0 - surface.getAngle()));
-                        ball.setTranslateY(-YCoordinate - ball.getRadius() - 1.0);
+                        double YCoordinate = ((ball.getTranslateZ() - surface.getZ())*sin(Math.toRadians(surface.getAngle())))/(sin(Math.toRadians(90.0 - surface.getAngle())));
+                        System.out.println("Y: " + YCoordinate);
+                        ball.setTranslateY(-YCoordinate - ball.getRadius() - 1.0 - surface.getY());
                         System.out.println(ball.getTranslateY());
                         System.out.println(surface.getSurfaceType());
                     }
