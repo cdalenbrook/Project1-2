@@ -1,161 +1,175 @@
 package Graphics;
 
+import java.util.ArrayList;
+import javafx.scene.Group;
 import javafx.scene.Parent;
-import javafx.scene.layout.Pane;
+import javafx.scene.PerspectiveCamera;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.SubScene;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.CullFace;
+import javafx.scene.shape.DrawMode;
+import javafx.scene.shape.MeshView;
+import javafx.scene.shape.Sphere;
+import javafx.scene.transform.Rotate;
+import javafx.scene.transform.Translate;
 
-public class MapDrawer extends Pane{
-    Circle ball1;
-    Circle ball2;
+/**
+ * Most of visualisation happens here. The map is drawn here.
+ * @author Jordan
+ * @version 2.6
+ * @date 20.03
+ */
+public class MapDrawer extends Parent{
+    //an arraylist containing the data needed to build a the map
+    private ArrayList<Surface> mapData = new ArrayList<>();
+    //rotation points for the 3D Camera
+    private Rotate xAxis = new Rotate(350, Rotate.X_AXIS);
+    private Rotate yAxis = new Rotate(0, Rotate.Y_AXIS);
+    private Rotate zAxis = new Rotate(0, Rotate.Z_AXIS);
     
+    //3D camera
+    private PerspectiveCamera camera;
+    
+    //this is the height the ball should be at, could change depending on going on a hill.
+    //The calculations and representation for this could be a lot better
+    private double Y = 0;
+    
+    //a sphere representing the ball
+    Ball ball;
+    //a really sthreched box serving as a trajectory for the ball - just an example,
+    //end version could be a lot better
+    MeshView trajectory;
+    
+    /**
+     * Constructor drawing everything
+     */
     public MapDrawer(){
-        getChildren().add(drawSideView());
-        getChildren().add(drawTopView());
-    }
-    private Parent drawSideView(){
-        Pane SideView = new Pane();
-        Rectangle sideView = new Rectangle(375, 375);
-        sideView.setFill(Color.SKYBLUE);
-        sideView.setStroke(Color.BLACK);
-        sideView.setTranslateX(0);
-        sideView.setTranslateY(0);
-        SideView.getChildren().add(sideView);
+        //add example map
+        addSomeData();
+        //great a group where all game parts should be added
+        Group root = new Group();
+        root.setAutoSizeChildren(false);
         
-        Polygon p1 = new Polygon();
-        Polygon p2 = new Polygon();
-        Polygon p3 = new Polygon();
-        Polygon p4 = new Polygon();
-        p1.getPoints().addAll(new Double[]{
-         0.0, 225.0,
-         100.0, 225.0,
-         100.0, 375.0,
-         0.0, 375.0,
-        });
-        p1.setFill(Color.GREEN);
-        p2.getPoints().addAll(new Double[]{ 
-         100.0, 225.0,
-         250.0, 175.0,
-         250.0, 375.0,
-         100.0, 375.0,
-        }); 
-        p2.setFill(Color.GREEN);
-        p3.getPoints().addAll(new Double[]{ 
-         250.0, 175.0,
-         375.0, 175.0,
-         375.0, 375.0,
-         250.0, 375.0,
-        });
-        p3.setFill(Color.YELLOW);
-        p4.getPoints().addAll(new Double[]{ 
-         50.0, 225.0,
-         100.0, 225.0,
-         100.0, 275.0,
-         50.0, 275.0,
-        });
-        p4.setFill(Color.BLUE);
-        SideView.getChildren().add(p1);
-        SideView.getChildren().add(p2);
-        SideView.getChildren().add(p3);
-        SideView.getChildren().add(p4);
+        //create an instance of Ball
+        ball = new Ball();
+        //set ball position
+        ball.setTranslateX(ball.getRadius() + 7.5);
+        ball.setTranslateY(-ball.getRadius() - Y - 1.0);
+        ball.setTranslateZ(ball.getRadius());
+        //add it to group
+        root.getChildren().add(ball);
         
-        ball1 = new Circle();
-        ball1.setFill(Color.BLACK);
-        ball1.setCenterX(5.0f); 
-        ball1.setCenterY(220.0f); 
-        ball1.setRadius(5.0f);
-        SideView.getChildren().add(ball1);
+        //create an example trajectory
+        Box trajectoryMesh = new Box((float)ball.getRadius()/2, (float)ball.getRadius()/2, 5.0f);
+        trajectory = new MeshView(trajectoryMesh);
+        trajectory.setCullFace(CullFace.NONE);
+        trajectory.setDrawMode(DrawMode.FILL);
+        trajectory.setMaterial(new PhongMaterial(Color.RED));
         
-        return SideView;
-    }
-    
-    private Parent drawTopView(){
-        Pane TopView = new Pane();
-        Rectangle topView = new Rectangle(375, 375);
-        topView.setFill(Color.SKYBLUE);
-        topView.setStroke(Color.BLACK);
-        topView.setTranslateX(425);
-        topView.setTranslateY(0);
+        trajectory.setTranslateX(ball.getTranslateX());
+        trajectory.setTranslateY(ball.getTranslateY());
+        trajectory.setTranslateZ(trajectoryMesh.getDepth()/2 + ball.getRadius()/2);
+        root.getChildren().add(trajectory);
         
-        TopView.getChildren().add(topView);
-        Polygon p1 = new Polygon();
-        Polygon p2 = new Polygon();
-        Polygon p3 = new Polygon();
-        Polygon p4 = new Polygon();
-        p1.getPoints().addAll(new Double[]{ 
-         425.0, 0.0,
-         800.0, 0.0,
-         800.0, 100.0,
-         425.0, 100.0
-        });
-        p1.setFill(Color.GREEN);
-        p2.getPoints().addAll(new Double[]{ 
-         425.0, 100.0, 
-         800.0, 100.0,
-         800.0, 250.0,
-         425.0, 250.0
-        }); 
-        p2.setFill(Color.DARKGREEN);
-        p3.getPoints().addAll(new Double[]{ 
-          425.0, 250.0,
-          800.0, 250.0,
-          800.0, 375.0,
-          425.0, 375.0,
-        });
-        p3.setFill(Color.YELLOW);
-        p4.getPoints().addAll(new Double[]{ 
-         575.0, 50.0,
-         650.0, 50.0,
-         650.0, 100.0,
-         575.0, 100.0
-             
-        });
-        p4.setFill(Color.BLUE);
-        TopView.getChildren().add(p1);
-        TopView.getChildren().add(p2);
-        TopView.getChildren().add(p3);
-        TopView.getChildren().add(p4);
-        
-        ball2 = new Circle();
-        ball2.setFill(Color.BLACK);
-        ball2.setCenterX(612.5f); 
-        ball2.setCenterY(5.0f); 
-        ball2.setRadius(5.0f);
-        TopView.getChildren().add(ball2);
-        
-        return TopView;
-    }
-    public double[] getBall1(){
-        return new double[]{ball1.getCenterX(), ball1.getCenterY()};
-    }
-    public double[] getBall2(){
-        return new double[]{ball2.getCenterX(), ball2.getCenterY()};
-    }
-    public void setBall1(double[] coordinate){
-        ball1.setCenterX(coordinate[0]);
-        ball1.setCenterY(coordinate[1]);
-        ball2.setCenterY(coordinate[0]);
-    }
-    public void setBall2(double[] coordinate){
-        ball2.setCenterX(coordinate[0]);
-        ball2.setCenterY(coordinate[1]);
-        ball1.setCenterX(coordinate[1]);
-    }
-    /*public boolean doesCollide1(double[] coordinate){
-        if(coordinate[0] < 0 || coordinate[0] > 375){
-        
+        //draw the actual map from mapData
+        for(Surface surface: mapData){
+            switch(surface.getSurfaceType()){
+                case EMPTY:
+                case GRASS:
+                case SAND:
+                case WATER:
+                    //if its one of the above it will create a box
+                    Box boxMesh = new Box((float)surface.getWidth(), (float)2.0, (float)surface.getLength());
+                    MeshView box = new MeshView(boxMesh);
+                    box.setCullFace(CullFace.NONE);
+                    box.setDrawMode(DrawMode.FILL);
+                    box.setMaterial(new PhongMaterial(surface.getColor()));
+                    box.setTranslateX(boxMesh.getWidth()/2 + surface.getX());
+                    box.setTranslateZ(boxMesh.getDepth()/2 + surface.getZ());
+                    box.setTranslateY(- Y);
+                    root.getChildren().add(box);
+                    break;
+                case GRASS_UP:
+                case GRASS_DOWN:
+                case SAND_UP:
+                case SAND_DOWN:
+                    //create a prism
+                    Prism triangleMesh = new Prism((float)surface.getWidth(), (float)surface.getLength(), (float)surface.getAngle());
+                    MeshView triangle = new MeshView(triangleMesh);
+                    triangle.setCullFace(CullFace.NONE);
+                    triangle.setDrawMode(DrawMode.FILL);
+                    triangle.setMaterial(new PhongMaterial(surface.getColor()));
+                    triangle.setTranslateX(surface.getX());
+                    triangle.setTranslateZ(surface.getZ());
+                    triangle.setTranslateY(-1.0);
+                    root.getChildren().add(triangle);
+                    Y += triangleMesh.getHeight(); 
+                    break;
+            }
         }
-        else if(coordinate[1] ){
+        //instance of camera
+        camera = new PerspectiveCamera(true);
+        //add transformations to camera
+        camera.getTransforms().addAll(
+                xAxis, yAxis, zAxis, new Translate(7.5, -7.5, -45));
         
-        }
-        else{
+        root.getChildren().add(camera);
         
-        }
+        //create a subscene for where the actual game will be represented
+        SubScene subScene = new SubScene(root, 800, 800, true, SceneAntialiasing.BALANCED);
+        subScene.setCamera(camera);
+        getChildren().add(subScene);
     }
-    public boolean doesCollide2(){
-        
-        return false;
-    }*/
+    /**
+     * Example method with example data for map1
+     */
+    public void addSomeData(){
+        mapData.add(new Surface(SurfaceType.GRASS, 15.0, 7.5, 0.0, 0.0));
+        mapData.add(new Surface(SurfaceType.WATER, 5.0, 2.5, 7.0, 5.0));
+        mapData.add(new Surface(SurfaceType.GRASS_UP, 15.0, 10.0, 0, 7.5, 30.0));
+        mapData.add(new Surface(SurfaceType.SAND, 15.0, 7.5, 0, 16.19));
+    }
+    /**
+     * Zoom in and out
+     * @param value of camera Z coordinate
+     */
+    public void CameraZoom(double value){
+        camera.setTranslateZ(-35 + value);
+        System.out.println(camera.getTranslateZ());
+    }
+    /**
+     * Rotate camera around X axis
+     * @param angle 
+     */
+    public void rotateX(double angle){
+        xAxis.setAngle(angle);
+    }
+    /**
+     * Rotate camera around Y axis
+     * @param angle 
+     */
+    public void rotateY(double angle){
+        yAxis.setAngle(angle);
+    }
+    /**
+     * Rotate camera around Z axis
+     * @param angle 
+     */
+    public void rotateZ(double angle){
+        zAxis.setAngle(angle);
+    }
+    /**
+     * @return instance of ball
+     */
+    public Sphere getBall(){
+        return ball;
+    }
+    /**
+     * @return array list, with coordinates, where ball will stop
+     */
+    public double[] getTrajectory(){
+        return new double[]{ball.getTranslateX(), ball.getTranslateY(), ball.getTranslateZ() + 5.0};
+    }
 }
