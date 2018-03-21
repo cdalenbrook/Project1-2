@@ -1,6 +1,8 @@
 package Old.Graphics;
 
 import Dynamics.MovementCycle;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -65,6 +67,21 @@ public class OptionsPane extends GridPane{
         force.setMajorTickUnit(50);
         force.setMinorTickCount(5);
         force.setBlockIncrement(5);
+        force.setFocusTraversable(false);
+
+        Label forceValue = new Label("Force Selected: 50" );
+        pane.setBottom(forceValue);
+        pane.setAlignment(forceValue, Pos.CENTER);
+
+
+        force.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                // set force of ball to the force it will be hit with
+                forceValue.textProperty().setValue(
+                        String.valueOf("Force Selected: " + (int) force.getValue()));
+            }
+        });
 
         pane.setCenter(force);
         pane.setMargin(force, new Insets(12,12,12,12));
