@@ -1,4 +1,4 @@
-package Graphics;
+package Old.Graphics;
 /**
  * A class with enums representing different possible surfaces. Not sure if Up and Down will be used in
  * end version.

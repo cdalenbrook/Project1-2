@@ -1,6 +1,6 @@
 package Dynamics;
 
-import Graphics.MapDrawer;
+import Old.Graphics.MapDrawer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
