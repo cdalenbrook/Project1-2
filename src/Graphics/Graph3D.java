@@ -1,13 +1,11 @@
 package Graphics;
 
-import javafx.scene.DepthTest;
 import javafx.scene.Group;
 import javafx.scene.Parent;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.SubScene;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
@@ -22,11 +20,11 @@ public class Graph3D extends Parent{
     private MeshView meshView;
     private PerspectiveCamera camera;
     
-    private Rotate xAxis = new Rotate(-40, Rotate.X_AXIS);
-    private Rotate yAxis = new Rotate(10, Rotate.Y_AXIS);
-    private Rotate zAxis = new Rotate(0, Rotate.Z_AXIS);
+    private Rotate xAxis = new Rotate(-100, Rotate.X_AXIS);
+    private Rotate yAxis = new Rotate(-50, Rotate.Y_AXIS);
+    private Rotate zAxis = new Rotate(-20, Rotate.Z_AXIS);
     
-    public Graph3D(int xmin, int xmax, int zmin, int zmax, int amplification){
+    public Graph3D(int xmin, int xmax, int zmin, int zmax, int amplification, Function function){
         
         Group root = new Group();
         root.setAutoSizeChildren(false);
@@ -41,13 +39,14 @@ public class Graph3D extends Parent{
         int zRange = zMax - zMin;
         
         TriangleMesh mesh = new TriangleMesh();
-
-        for (int x = xMin; x < xMax; x++) {
-            for (int z = zMin; z < zMax; z++) {
-                mesh.getPoints().addAll(x, calculate(x, z), z);
+        
+        for (float x = 0; x < xRange; x++) {
+            for (float z = 0; z < zRange; z++) {
+                float y = function.getHeight()[(int)x][(int)z]/10;
+                mesh.getPoints().addAll(x, y, z);
             }
         }
-        
+
         for (float x = 0; x < xRange - 1; x++) {
             for (float z = 0; z < zRange - 1; z++) {
 
@@ -86,7 +85,7 @@ public class Graph3D extends Parent{
             }
         }
         
-        Graph2D image = new Graph2D(xmin, xmax, zmin, zmax, 1);
+        Graph2D image = new Graph2D(xmin, xmax, zmin, zmax, amplification, function);
         Image diffuseMap = image.getImage();
 
         PhongMaterial material = new PhongMaterial();
@@ -99,13 +98,13 @@ public class Graph3D extends Parent{
         //meshView.setMaterial(new PhongMaterial(Color.BLACK));
         meshView.setMaterial(material);
         meshView.setCullFace(CullFace.NONE);
-        meshView.setDrawMode(DrawMode.LINE);
-        meshView.setDepthTest(DepthTest.ENABLE);
+        meshView.setDrawMode(DrawMode.FILL);
+        //meshView.setDepthTest(DepthTest.ENABLE);
         root.getChildren().add(meshView);
         camera = new PerspectiveCamera(true);
         //add transformations to camera
         camera.getTransforms().addAll(
-                xAxis, yAxis, zAxis, new Translate(0, 5, -55));
+                xAxis, yAxis, zAxis, new Translate(0, -5, -60));
         
         root.getChildren().add(camera);
         
@@ -118,13 +117,6 @@ public class Graph3D extends Parent{
     }
     public MeshView getMesh(){
         return meshView;
-    }
-    
-    private int calculate(int x, int z){
-        double y = ((0.1*(x/amplification)) + (0.03*(Math.pow((x/amplification), 2.0))) + (0.2*(z/amplification)));
-        Long L = Math.round(y);
-        int i = Integer.valueOf(L.intValue());
-        return i;
     }
     public void CameraZoom(double value){
         camera.setTranslateZ(camera.getTranslateZ() + value);

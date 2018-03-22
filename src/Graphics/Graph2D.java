@@ -1,6 +1,5 @@
 package Graphics;
 
-import static Test.Chart3dDemo.normalizeValue;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -8,46 +7,46 @@ import javafx.scene.paint.Color;
 public class Graph2D {
     private WritableImage image;
     
-    public Graph2D(int xMin, int xMax, int yMin, int yMax, int resolution){
-        //resolution should be added to make picture clearer
+    public Graph2D(int xmin, int xmax, int zmin, int zmax, int amplification, Function function){
         
-        int width = (xMax - xMin);
-        int length = (yMax - yMin);
+        int xMin = xmin*amplification;
+        int xMax = xmax*amplification;
+        int zMin = zmin*amplification;
+        int zMax = zmax*amplification;
         
-        image = new WritableImage(width, length);
+        int xRange = xMax - xMin;
+        int zRange = zMax - zMin;
+        
+        image = new WritableImage(xRange, zRange);
         PixelWriter pw = image.getPixelWriter();
         for (int x = xMin; x < xMax; x++) {
-            for (int y = yMin; y < yMax; y++) {
+            for (int z = zMin; z < zMax; z++) {
 
-                double heigth = ((0.1*(x)) + (0.03*(Math.pow(x, 2.0))) + (0.2*(y)));
-                //calculations
-                int min = 0;
-                int max = 1000;
+                float height = function.getHeight()[xRange + x - xMax][zRange + z - zMax];
+                
+                int min = function.getMin();
+                int max = function.getMax();
                 
                 Color color;
-                if(heigth <= 0){
-                    color = Color.BLUE;
+                if(height <= 0){
+                    double newHeight;
+                    if(min < -1){
+                        newHeight = normalizeValue(height, min, 0, 0., 1.);
+                    }
+                    else{
+                        newHeight = normalizeValue(height, -1, 0, 0., 1.);
+                    }
+                    color = Color.DARKBLUE.interpolate(Color.ALICEBLUE, newHeight);
+                    //color = Color.color(0, 0, 0).interpolate(Color.color(0, 178, 255), newHeight);
                 }
                 else{
-                    double newHeight = normalizeValue(heigth, min, max, 0., 1.);
-
-                    color = Color.GREEN.interpolate(Color.YELLOW, newHeight);
+                    double newHeight = normalizeValue(height, 0, max, 0., 1.);
+                    color = Color.DARKGREEN.interpolate(Color.CHARTREUSE, newHeight);
+                    //color = Color.color(0, 102, 51).interpolate(Color.color(178, 255, 102), newHeight);
 
                     
                 }
-                if(xMin < 0 && yMin >= 0){
-                    pw.setColor(x + width + xMin, y, color);
-                }
-                else if(yMin < 0 && xMin >= 0){
-                    pw.setColor(x, y + length + yMin, color);
-                }
-                else if(xMin < 0 && yMin <0){
-                    pw.setColor(x + width + xMin, y + length + yMin, color);
-                }
-                else{
-                    pw.setColor(x, y, color);
-                }
-
+                pw.setColor(x + xRange - xMax, z + zRange - zMax, color);
             }
         }
     }

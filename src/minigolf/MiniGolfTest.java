@@ -1,6 +1,7 @@
 package minigolf;
 
 import Graphics.CameraController;
+import Graphics.Function;
 import Graphics.Graph3D;
 import javafx.application.Application;
 import javafx.scene.PerspectiveCamera;
@@ -8,7 +9,6 @@ import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 /**
@@ -31,8 +31,15 @@ public class MiniGolfTest extends Application {
     @Override
     public void start(Stage primaryStage) {
         Pane root = new Pane();
-        Graph3D graph = new Graph3D(-1, 1, -1, 1, 20);
+        int startX = -1;
+        int endX = 1;
+        int startZ = -1;
+        int endZ = 1;
+        int amplification = 10;
+        Function function = new Function(startX, endX, startZ, endZ, amplification);
+        Graph3D graph = new Graph3D(startX, endX, startZ, endZ, amplification, function);
         root.getChildren().add(graph);
+        
         Scene scene = new Scene(root, 1600, 900, true, SceneAntialiasing.BALANCED);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new CameraController(graph));
         scene.setCamera(new PerspectiveCamera());

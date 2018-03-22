@@ -1,13 +1,16 @@
 package minigolf;
 
+import Graphics.Function;
+import Graphics.Game2D;
 import Graphics.Graph2D;
-import static java.nio.file.Files.size;
+import Graphics.OptionsPane;
 import javafx.application.Application;
-import javafx.geometry.Point3D;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.SceneAntialiasing;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 
 /**
@@ -25,34 +28,55 @@ public class MiniGolf extends Application {
     @Override
     public void start(Stage primaryStage) {
         GridPane pane = new GridPane();
+        int startX = -1;
+        int endX = 1;
+        int startZ = -1;
+        int endZ = 1;
+        int amplification = 300;
         
-        Graph2D image = new Graph2D(-200, 200, -200, 200, 0);
+        int rangeX = (endX - startX)*amplification;
+        int rangeZ = (endZ - startZ)*amplification;
+        
+        Function function = new Function(startX, endX, startZ, endZ, amplification);
+        Pane map = new Pane();
+        Graph2D image = new Graph2D(startX, endX, startZ, endZ, amplification, function);
         
         ImageView iv = new ImageView(image.getImage());
         iv.setRotate(90);
-        //iv.setRotationAxis(new Point3D(1, 0, 0));
         
-        pane.add(iv, 0, 0);
-        /* 
-        //an instance of MapDrawer
-        MapDrawer map = new MapDrawer();
-        //add map to the pane
+        map.getChildren().add(iv);
+        Game2D game = new Game2D(10, amplification);
+        map.getChildren().add(game);
+        
+        game.getBall().setCenterX(0);
+        game.getBall().setCenterY(0);
+        
+        game.getFinish().setCenterX(0);
+        game.getFinish().setCenterY(0);
+        
         pane.add(map, 0, 0);
-        //add OptionsPane instance to pane
-        pane.add(new OptionsPane(map), 0, 1);
-        //allgin pane
+        pane.add(new OptionsPane(), 0, 1);
         pane.setAlignment(Pos.TOP_CENTER);
-        */
+        pane.setVgap(20);
+        pane.setHgap(20);
+        pane.setPadding(new Insets(20, 20, 20, 20));
         
-        //Create a scene from pane, with dimensions, 1000 and 900. The rest is
-        //needed for the 3D Graphics and rotations, because otherwise, the way things are seen changes.
-        Scene scene = new Scene(pane, 750, 600, true, SceneAntialiasing.BALANCED);
-        //Add an EventFilter to the Scene with options for moving the camera
-        //scene.addEventFilter(KeyEvent.KEY_PRESSED, new CameraController(map));
+        int width = rangeX + 100;
+        int height = rangeZ + 200;
         
-        //Create a primary stage - basically the window.
+        Scene scene = new Scene(pane, width, height);
+       
+        
         primaryStage.setTitle("Crazy Putting!");
         primaryStage.setScene(scene);
+        
+        primaryStage.setWidth(width);
+        primaryStage.setHeight(height);
+        
+        /* Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+        primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+        primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+        */
         primaryStage.show();
     }
     /**
