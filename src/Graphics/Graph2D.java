@@ -28,7 +28,7 @@ public class Graph2D {
                 int max = function.getMax();
                 
                 Color color;
-                if(height <= 0){
+                if(height < 0){
                     double newHeight;
                     if(min < -1){
                         newHeight = normalizeValue(height, min, 0, 0., 1.);
@@ -36,7 +36,7 @@ public class Graph2D {
                     else{
                         newHeight = normalizeValue(height, -1, 0, 0., 1.);
                     }
-                    color = Color.DARKBLUE.interpolate(Color.ALICEBLUE, newHeight);
+                    color = Color.DARKBLUE.interpolate(Color.BLUE, newHeight);
                     //color = Color.color(0, 0, 0).interpolate(Color.color(0, 178, 255), newHeight);
                 }
                 else{

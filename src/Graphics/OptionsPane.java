@@ -1,7 +1,5 @@
 package Graphics;
 
-import Old.Graphics.*;
-import Dynamics.MovementCycle;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -12,11 +10,9 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import Physics.Physics;
 
 /**
  * This class creates a GridPane with options for shooting the ball.
@@ -25,8 +21,10 @@ import javafx.scene.text.Font;
  * @date 20.03
  */
 public class OptionsPane extends GridPane{
-   
-    public OptionsPane(){
+    private Slider velocity;
+    private Slider angle;
+    
+    public OptionsPane(Game2D game){
         //create a button
         Button shoot = new Button("Shoot");
         //some css style thins, font is 22 Arial, base is button color
@@ -39,6 +37,8 @@ public class OptionsPane extends GridPane{
         shoot.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent e){
+                Physics physics = new Physics(velocity.getValue(), angle.getValue(), game);
+                physics.startMoving();
         }});
         
         add(shoot, 1, 0);
@@ -63,7 +63,7 @@ public class OptionsPane extends GridPane{
         pane.add(velocityText, 1, 0);
         pane.setHalignment(velocityText, HPos.CENTER);
 
-        Slider velocity = new Slider(0,10,5);
+        velocity = new Slider(0,10,5);
         velocity.setShowTickLabels(true);
         velocity.setShowTickMarks(true);
         velocity.setMajorTickUnit(2);
@@ -95,7 +95,7 @@ public class OptionsPane extends GridPane{
         pane.add(angleText, 2, 0);
         pane.setHalignment(angleText, HPos.CENTER);
 
-        Slider angle = new Slider(-90,90,0);
+        angle = new Slider(-90,90,0);
         angle.setShowTickLabels(true);
         angle.setShowTickMarks(true);
         angle.setMajorTickUnit(30);

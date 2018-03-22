@@ -34,13 +34,12 @@ public class MovementCycle {
         //add keyvalues, changing the coordinates from initial ones to those in the end of trajectory
         KeyValue keyValueX = new KeyValue(ball.translateXProperty(), coordinates[0]);
         KeyValue keyValueY = new KeyValue(ball.translateYProperty(), coordinates[1]);
-        KeyValue keyValueZ = new KeyValue(ball.translateZProperty(), coordinates[2]);
         
         //how fast the ball will move
         Duration duration = Duration.millis(2000);
         
         //create a keyframe
-        KeyFrame keyFrame = new KeyFrame(duration, keyValueX, keyValueY, keyValueZ);
+        KeyFrame keyFrame = new KeyFrame(duration, keyValueX, keyValueY);
         
         //add it to the timeline
         movement.getKeyFrames().add(keyFrame);
@@ -48,4 +47,18 @@ public class MovementCycle {
         //play the timeline
         movement.play();
     }
+    /* private void initializePhysics(int x, int y, double totalVelocity, double angle){
+        int xCoordinate = x;
+        int yCoordinate = y;
+        double xVelocity=(Math.abs(totalVelocity*Math.sin(radiansToDegrees(angle))));
+        double yVelocity=(Math.abs(totalVelocity*Math.cos(radiansToDegrees(angle))));
+        System.out.println("TOTAL VELOCITY = " + totalVelocity + "m/s");
+        System.out.println("ANGLE OF SHOT = " + angle + "°");
+        PhysicsListener timerlistener = new PhysicsListener(xCoordinate, yCoordinate, xVelocity, yVelocity);
+        timerlistener.start();
+        
+    }
+    public double radiansToDegrees(double degree){
+        return ((degree*Math.PI)/180);
+    } */
 }

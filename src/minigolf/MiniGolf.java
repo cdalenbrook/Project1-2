@@ -42,27 +42,30 @@ public class MiniGolf extends Application {
         Graph2D image = new Graph2D(startX, endX, startZ, endZ, amplification, function);
         
         ImageView iv = new ImageView(image.getImage());
-        iv.setRotate(90);
+        iv.setRotate(180);
         
         map.getChildren().add(iv);
-        Game2D game = new Game2D(10, amplification);
+        Game2D game = new Game2D(5, amplification*2);
         map.getChildren().add(game);
+        int CoordinateX = 0;
+        int CoordinateZ = 0;
+        game.getBall().setCenterX((startX - CoordinateX)*amplification + rangeX);
+        game.getBall().setCenterY((startZ - CoordinateZ)*amplification + rangeZ);
         
-        game.getBall().setCenterX(0);
-        game.getBall().setCenterY(0);
-        
-        game.getFinish().setCenterX(0);
-        game.getFinish().setCenterY(0);
+        int coordinateX  = 0;
+        int coordinateZ = 1;
+        game.getFinish().setCenterX((startX - coordinateX)*amplification + rangeX);
+        game.getFinish().setCenterY((startZ - coordinateZ)*amplification + rangeZ);
         
         pane.add(map, 0, 0);
-        pane.add(new OptionsPane(), 0, 1);
+        pane.add(new OptionsPane(game), 0, 1);
         pane.setAlignment(Pos.TOP_CENTER);
         pane.setVgap(20);
         pane.setHgap(20);
         pane.setPadding(new Insets(20, 20, 20, 20));
         
         int width = rangeX + 100;
-        int height = rangeZ + 200;
+        int height = rangeZ + 300;
         
         Scene scene = new Scene(pane, width, height);
        
