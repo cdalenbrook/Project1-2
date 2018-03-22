@@ -21,7 +21,7 @@ public class Physics{
   public static JTextField text, text2;
   public static JPanel panel, panel2, panel3;
   public static JButton button;
-  public static final double MASS_OF_BALL = 0.45;
+  public static final double MASS_OF_BALL = 0.045;
   public static  double gravity = -9.81;
   public static double slopeAngleX = 0, slopeAngleY = 0;
   //public static double slope = 2;

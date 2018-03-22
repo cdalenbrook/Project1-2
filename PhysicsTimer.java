@@ -33,8 +33,8 @@ public class PhysicsTimer extends Physics{
       System.out.println("Z Velocity: " + zVelocity);
 
       System.out.println("");
-      gravityForceOnBallX = (gravity)*Math.sin(slopeAngleX);
-      gravityForceOnBallY = (gravity)*Math.sin(slopeAngleY);
+      gravityForceOnBallX = (gravity*MASS_OF_BALL)*Math.sin(slopeAngleX); //added mass of ball for weight
+      gravityForceOnBallY = (gravity*MASS_OF_BALL)*Math.sin(slopeAngleY); //added mass of ball for weight
       gravityForceOnX = (gravityForceOnBallX)*Math.sin(slopeAngleX);
       gravityForceOnY = (gravityForceOnBallY)*Math.cos(slopeAngleY);
 
