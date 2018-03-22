@@ -6,6 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -19,7 +20,7 @@ import javafx.scene.text.Font;
 
 /**
  * This class creates a GridPane with options for shooting the ball.
- * @author Jordan
+ * @author Jordan, Charlotte
  * @version 1.0
  * @date 20.03
  */
@@ -46,41 +47,76 @@ public class OptionsPane extends GridPane{
         setAlignment(Pos.CENTER);
     }
     /**
-     * Create a BorderPane with options to control force
+     * Create a BorderPane with options to control velocity and angle
      * @return BorderPane
      */
-    public BorderPane force(){
-        BorderPane pane = new BorderPane();
-        Label forceText = new Label("Specify force:");
-        forceText.setFont(new Font("Arial", 20));
-        
-        pane.setTop(forceText);
-        pane.setAlignment(forceText, Pos.CENTER);
+    public GridPane force(){
+        GridPane pane = new GridPane();
+        pane.setHgap(20); //horizontal gap in pixels => that's what you are asking for
+        pane.setVgap(20); //vertical gap in pixels
+        pane.setPadding(new Insets(10, 10, 10, 10));
 
-        Slider force = new Slider(0,100,50);
-        force.setShowTickLabels(true);
-        force.setShowTickMarks(true);
-        force.setMajorTickUnit(50);
-        force.setMinorTickCount(5);
-        force.setBlockIncrement(5);
-        force.setFocusTraversable(false);
+        //Velocity text and slider:
+        Label velocityText = new Label("Specify Velocity:");
+        velocityText.setFont(new Font("Arial", 20));
 
-        Label forceValue = new Label("Force Selected: 50" );
-        pane.setBottom(forceValue);
-        pane.setAlignment(forceValue, Pos.CENTER);
+        pane.add(velocityText, 1, 0);
+        pane.setHalignment(velocityText, HPos.CENTER);
+
+        Slider velocity = new Slider(0,10,5);
+        velocity.setShowTickLabels(true);
+        velocity.setShowTickMarks(true);
+        velocity.setMajorTickUnit(2);
+        velocity.setMinorTickCount(1);
+        velocity.setBlockIncrement(1);
+        velocity.setFocusTraversable(false);
+
+        pane.add(velocity, 1, 1);
+
+        Label velocityValue = new Label("Velocity Selected: 5" );
+        pane.setHalignment(velocityValue, HPos.CENTER);
+        pane.add(velocityValue, 1, 2);
 
 
-        force.valueProperty().addListener(new ChangeListener<Number>() {
+        velocity.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
                 // set force of ball to the force it will be hit with
-                forceValue.textProperty().setValue(
-                        String.valueOf("Force Selected: " + (int) force.getValue()));
+                velocityValue.textProperty().setValue(
+                        String.valueOf("Velocity Selected: " + (int) velocity.getValue()));
             }
         });
 
-        pane.setCenter(force);
-        pane.setMargin(force, new Insets(12,12,12,12));
+
+        //Angle text and slider:
+        Label angleText = new Label("Specify Angle:");
+        angleText.setFont(new Font("Arial", 20));
+
+        pane.add(angleText, 2, 0);
+        pane.setHalignment(angleText, HPos.CENTER);
+
+        Slider angle = new Slider(-90,90,0);
+        angle.setShowTickLabels(true);
+        angle.setShowTickMarks(true);
+        angle.setMajorTickUnit(30);
+        angle.setMinorTickCount(5);
+        angle.setBlockIncrement(5);
+        angle.setFocusTraversable(false);
+
+        pane.add(angle, 2, 1);
+
+        Label angleValue = new Label("Angle Selected: 0" );
+        pane.setHalignment(angleValue, HPos.CENTER);
+        pane.add(angleValue, 2, 2);
+
+        angle.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                // set angle of ball to the angle it will be hit with
+                angleValue.textProperty().setValue(
+                        String.valueOf("Angle Selected: " + (int) angle.getValue()));
+            }
+        });
         
         return pane;
     }
