@@ -20,9 +20,9 @@ public class Graph3D extends Parent{
     private MeshView meshView;
     private PerspectiveCamera camera;
     
-    private Rotate xAxis = new Rotate(-100, Rotate.X_AXIS);
-    private Rotate yAxis = new Rotate(-50, Rotate.Y_AXIS);
-    private Rotate zAxis = new Rotate(-20, Rotate.Z_AXIS);
+    private Rotate xAxis = new Rotate(-350, Rotate.X_AXIS);
+    private Rotate yAxis = new Rotate(-20, Rotate.Y_AXIS);
+    private Rotate zAxis = new Rotate(-50, Rotate.Z_AXIS);
     
     public Graph3D(int xmin, int xmax, int zmin, int zmax, int amplification, Function function){
         
@@ -43,7 +43,7 @@ public class Graph3D extends Parent{
         for (float x = 0; x < xRange; x++) {
             for (float z = 0; z < zRange; z++) {
                 float y = function.getHeight()[(int)x][(int)z]/10;
-                mesh.getPoints().addAll(x, y, z);
+                mesh.getPoints().addAll(x, -y, z);
             }
         }
 
@@ -104,7 +104,7 @@ public class Graph3D extends Parent{
         camera = new PerspectiveCamera(true);
         //add transformations to camera
         camera.getTransforms().addAll(
-                xAxis, yAxis, zAxis, new Translate(0, -5, -60));
+                xAxis, yAxis, zAxis, new Translate(0, -5, -37));
         
         root.getChildren().add(camera);
         

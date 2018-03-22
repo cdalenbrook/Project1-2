@@ -37,7 +37,7 @@ public class OptionsPane extends GridPane{
         shoot.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent e){
-                Physics physics = new Physics(velocity.getValue(), angle.getValue(), game);
+                Physics physics = new Physics(velocity.getValue()*1000, angle.getValue(), game);
                 physics.startMoving();
         }});
         

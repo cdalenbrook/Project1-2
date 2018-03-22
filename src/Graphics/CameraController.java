@@ -57,11 +57,11 @@ public class CameraController implements EventHandler<KeyEvent>{
         }
         else if(event.getCode() == KeyCode.N){
             zoom+= 1;
-            map.CameraZoom(zoom);
+            map.CameraZoom(+1);
         }
         else if(event.getCode() == KeyCode.M){
             zoom-= 1;
-            map.CameraZoom(zoom);
+            map.CameraZoom(-1);
         }
         else if(event.getCode() == KeyCode.P){
             map.print();

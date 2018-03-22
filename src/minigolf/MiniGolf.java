@@ -28,11 +28,11 @@ public class MiniGolf extends Application {
     @Override
     public void start(Stage primaryStage) {
         GridPane pane = new GridPane();
-        int startX = -1;
-        int endX = 1;
-        int startZ = -1;
-        int endZ = 1;
-        int amplification = 300;
+        int startX = -200;
+        int endX = 200;
+        int startZ = -200;
+        int endZ = 200;
+        int amplification = 1;
         
         int rangeX = (endX - startX)*amplification;
         int rangeZ = (endZ - startZ)*amplification;
