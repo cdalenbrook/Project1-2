@@ -23,8 +23,10 @@ import Physics.Physics;
 public class OptionsPane extends GridPane{
     private Slider velocity;
     private Slider angle;
+    private Game2D game;
     
     public OptionsPane(Game2D game){
+        this.game = game;
         //create a button
         Button shoot = new Button("Shoot");
         //some css style thins, font is 22 Arial, base is button color
@@ -105,7 +107,7 @@ public class OptionsPane extends GridPane{
 
         pane.add(angle, 2, 1);
 
-        Label angleValue = new Label("Angle Selected: 0" );
+        Label angleValue = new Label("Angle Selected: 0°" );
         pane.setHalignment(angleValue, HPos.CENTER);
         pane.add(angleValue, 2, 2);
 
@@ -114,7 +116,8 @@ public class OptionsPane extends GridPane{
                                 Number old_val, Number new_val) {
                 // set angle of ball to the angle it will be hit with
                 angleValue.textProperty().setValue(
-                        String.valueOf("Angle Selected: " + (int) angle.getValue()));
+                        String.valueOf("Angle Selected: " + (int) angle.getValue() + "°"));
+                game.setAngle(angle.getValue());
             }
         });
         
