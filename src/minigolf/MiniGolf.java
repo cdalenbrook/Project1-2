@@ -68,7 +68,6 @@ public class MiniGolf extends Application {
         int height = rangeZ + 300;
         
         Scene scene = new Scene(pane, width, height);
-       
         
         primaryStage.setTitle("Crazy Putting!");
         primaryStage.setScene(scene);

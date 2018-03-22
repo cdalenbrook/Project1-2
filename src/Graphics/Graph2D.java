@@ -6,6 +6,7 @@ import javafx.scene.paint.Color;
 
 public class Graph2D {
     private WritableImage image;
+    public boolean gameOver = false;
     
     public Graph2D(int xmin, int xmax, int zmin, int zmax, int amplification, Function function){
         
@@ -29,6 +30,7 @@ public class Graph2D {
                 
                 Color color;
                 if(height < 0){
+                    gameOver = true;
                     double newHeight;
                     if(min < -1){
                         newHeight = normalizeValue(height, min, 0, 0., 1.);
@@ -50,9 +52,7 @@ public class Graph2D {
             }
         }
     }
-    public WritableImage getImage(){
-        return image;
-    }
+    public WritableImage getImage(){ return image; }
     
     public double normalizeValue(double value, double min, double max, double newMin, double newMax) {
 
