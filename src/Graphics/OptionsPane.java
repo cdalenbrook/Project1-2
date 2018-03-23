@@ -98,6 +98,7 @@ public class OptionsPane extends GridPane{
                             
                             timeline.stop();
                             this.stop();
+                            //physics.stop();
                             game.getBall().setCenterX(startX);
                             game.getBall().setCenterY(startY);
                             game.setLine();
@@ -142,7 +143,7 @@ public class OptionsPane extends GridPane{
         pane.add(velocityText, 1, 0);
         pane.setHalignment(velocityText, HPos.CENTER);
 
-        velocity = new Slider(0,10,5);
+        velocity = new Slider(0,20,2);
         velocity.setShowTickLabels(true);
         velocity.setShowTickMarks(true);
         velocity.setMajorTickUnit(2);
