@@ -42,7 +42,7 @@ public class Graph3D extends Parent{
         
         for (float x = 0; x < xRange; x++) {
             for (float z = 0; z < zRange; z++) {
-                float y = function.getHeight()[(int)x][(int)z]/10;
+                float y = function.getHeight()[(int)x][(int)z]/1000;
                 mesh.getPoints().addAll(x, -y, z);
             }
         }

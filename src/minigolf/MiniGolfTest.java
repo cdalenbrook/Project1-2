@@ -31,11 +31,11 @@ public class MiniGolfTest extends Application {
     @Override
     public void start(Stage primaryStage) {
         Pane root = new Pane();
-        int startX = -1;
-        int endX = 1;
-        int startZ = -1;
-        int endZ = 1;
-        int amplification = 10;
+        int startX = -50;
+        int endX = 50;
+        int startZ = -50;
+        int endZ = 50;
+        int amplification = 1;
         Function function = new Function(startX, endX, startZ, endZ, amplification);
         Graph3D graph = new Graph3D(startX, endX, startZ, endZ, amplification, function);
         root.getChildren().add(graph);
