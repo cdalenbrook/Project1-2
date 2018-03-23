@@ -79,7 +79,7 @@ public class OptionsPane extends GridPane{
                 
                 EventHandler onFinished = new EventHandler<ActionEvent>() {
                     public void handle(ActionEvent t){
-                        game.setLineTest();
+                        game.setLine();
                     }
                 };
                 Duration duration = Duration.millis(2000);
@@ -105,8 +105,8 @@ public class OptionsPane extends GridPane{
         this.rangeY = rangeY;
     }
     /**
-     * Create a BorderPane with options to control velocity and angle
-     * @return BorderPane
+     * Create a GridPane with options to control velocity and angle
+     * @return GridPane
      */
     public GridPane force(){
         GridPane pane = new GridPane();

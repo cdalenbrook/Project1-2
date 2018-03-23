@@ -4,6 +4,12 @@ import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
+/**
+ * This class takes the input function and creates heat-map-like a graph of it
+ * @author Jordan
+ * @version 1.0
+ * @date 20.03
+ */
 public class Graph2D {
     private WritableImage image;
     public boolean gameOver = false;
@@ -52,7 +58,21 @@ public class Graph2D {
             }
         }
     }
+
+    /**
+     * Getter method for the image of the game
+     * @return image
+     */
     public WritableImage getImage(){ return image; }
+
+    /**
+     * Normalization method for the value of the co-ordinates of the course
+     * @param value value in the range of co-ordinates to be normalized
+     * @param min current minimum value
+     * @param max current maximum value
+     * @param newMin normalized minimum value
+     * @param newMax normalized maximum value
+     */
     
     public double normalizeValue(double value, double min, double max, double newMin, double newMax) {
 
