@@ -11,6 +11,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
@@ -118,6 +119,8 @@ public class DataMenu extends VBox{
                 
                 int rangeX = ((Integer.parseInt(EndX.getText()) - (Integer.parseInt(StartX.getText())))*(Integer.parseInt(Amplification.getText())));
                 int rangeY = ((Integer.parseInt(EndY.getText()) - (Integer.parseInt(StartY.getText())))*(Integer.parseInt(Amplification.getText())));
+                int xMax = Integer.parseInt(EndX.getText())*Integer.parseInt(Amplification.getText());
+                int yMax = Integer.parseInt(EndY.getText())*Integer.parseInt(Amplification.getText());
                 
                 
                 Game2D ball = new Game2D(Integer.parseInt(Amplification.getText())/30, Integer.parseInt(Amplification.getText())*Integer.parseInt(Amplification.getText())/100);
@@ -127,9 +130,8 @@ public class DataMenu extends VBox{
                 ball.getFinish().setCenterX((Integer.parseInt(StartX.getText()) - Integer.parseInt(GoalX.getText()))*Integer.parseInt(Amplification.getText()) + rangeX);
                 ball.getFinish().setCenterY((Integer.parseInt(StartY.getText()) - Integer.parseInt(GoalY.getText()))*Integer.parseInt(Amplification.getText()) + rangeY);
                 
-                options.setData(Integer.parseInt(Amplification.getText()), rangeX, rangeY);
+                options.setData(Integer.parseInt(Amplification.getText()), rangeX, rangeY, xMax, yMax);
                 group.getChildren().addAll(ball.getBall(), ball.getFinish(), ball.setLine());
-                
                 //PerspectiveCamera camera = new PerspectiveCamera(true);
                 //add possible rotations and position of camera
                 //camera.getTransforms().addAll(new Translate(CameraX, CameraY, CameraZ));

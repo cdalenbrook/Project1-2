@@ -1,5 +1,6 @@
 package Graphics;
 
+import Physics.Physics;
 import javafx.animation.AnimationTimer;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -12,6 +13,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
@@ -19,6 +21,7 @@ import javafx.scene.text.Font;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
@@ -36,10 +39,16 @@ public class OptionsPane extends GridPane{
     private int amplification;
     private int rangeX;
     private int rangeY;
+    private int xMax;
+    private int yMax;
+    
+    private double startX;
+    private double startY;
     
     public OptionsPane(){
         //create a button
         Button shoot = new Button("Shoot");
+        CheckBox withoutPhysics = new CheckBox("Without physics");
         //some css style thins, font is 22 Arial, base is button color
         shoot.setStyle("-fx-font: 22 arial; -fx-base: #6495ED");
         //setsize
@@ -50,22 +59,45 @@ public class OptionsPane extends GridPane{
         shoot.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent e){
-                double startX = game.getBall().getCenterX();
-                double startY = game.getBall().getCenterY();
-                
+                startX = game.getBall().getCenterX();
+                startY = game.getBall().getCenterY();
                 Timeline timeline = new Timeline();
-                timeline.setCycleCount(1);
+                Physics physics = new Physics(velocity.getValue(), angle.getValue(), game);
+                if(!withoutPhysics.isSelected()){
+                    physics.startMoving();
+                }
+                else{
+                    timeline.setCycleCount(1);  
+                    KeyValue keyValueX = new KeyValue(game.getBall().centerXProperty(), game.getLine().getEndX());
+                    KeyValue keyValueY = new KeyValue(game.getBall().centerYProperty(), game.getLine().getEndY());
+
+                    EventHandler onFinished = new EventHandler<ActionEvent>() {
+                        public void handle(ActionEvent t){
+                            game.setLineTest();
+                            startX = game.getBall().getCenterX();
+                            startY = game.getBall().getCenterY();
+                        }
+                    };
+                    Duration duration = Duration.millis(2000);
+
+                    KeyFrame keyFrame = new KeyFrame(duration, onFinished, keyValueX, keyValueY);
+
+                    timeline.getKeyFrames().add(keyFrame);
+
+                    timeline.play();
+                }
                 
                 AnimationTimer timer = new AnimationTimer() {
                     @Override
                     public void handle(long l){
-                        double x = game.getBall().getCenterX() - amplification;
-                        double y = game.getBall().getCenterY() - amplification;
+                        double x = -((game.getBall().getCenterX() - rangeX + xMax)/300);
+                        double y = -((game.getBall().getCenterY() - rangeY + yMax)/300);
                         double height = ((0.1*x) + (0.03*(Math.pow(x, 2.0))) + (0.2*y));
-                        System.out.println(height);
-                        if(height < 0){
+                        if(height < 0 || game.getBall().getCenterX() < 0 || game.getBall().getCenterY() < 0
+                                || game.getBall().getCenterX() > rangeX || game.getBall().getCenterY() > rangeY){
                             
                             timeline.stop();
+                            this.stop();
                             game.getBall().setCenterX(startX);
                             game.getBall().setCenterY(startY);
                             game.setLine();
@@ -73,41 +105,26 @@ public class OptionsPane extends GridPane{
                         }
                     }
                 };
-                
-                KeyValue keyValueX = new KeyValue(game.getBall().centerXProperty(), game.getLine().getEndX());
-                KeyValue keyValueY = new KeyValue(game.getBall().centerYProperty(), game.getLine().getEndY());
-                
-                EventHandler onFinished = new EventHandler<ActionEvent>() {
-                    public void handle(ActionEvent t){
-                        game.setLineTest();
-                    }
-                };
-                Duration duration = Duration.millis(2000);
-                
-                KeyFrame keyFrame = new KeyFrame(duration, onFinished, keyValueX, keyValueY);
- 
-                timeline.getKeyFrames().add(keyFrame);
- 
-                timeline.play();
                 timer.start();
         }});
-        
-        add(shoot, 1, 0);
+        VBox vbox = new VBox();
+        vbox.getChildren().addAll(shoot, withoutPhysics);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(7.5);
+        add(vbox, 1, 0);
         add(force(), 0, 0);
         setHgap(20);
         setAlignment(Pos.CENTER);
         setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, new Insets(15, 15, 15, 15))));
         
     }
-    public void setData(int amplification, int rangeX, int rangeY){
+    public void setData(int amplification, int rangeX, int rangeY, int xMax, int yMax){
         this.amplification = amplification;
         this.rangeX = rangeX;
         this.rangeY = rangeY;
+        this.xMax = xMax;
+        this.yMax = yMax;
     }
-    /**
-     * Create a BorderPane with options to control velocity and angle
-     * @return BorderPane
-     */
     public GridPane force(){
         GridPane pane = new GridPane();
         pane.setHgap(20); //horizontal gap in pixels => that's what you are asking for
