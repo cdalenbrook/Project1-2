@@ -49,10 +49,6 @@ public class Main extends Application {
         
         primaryStage.show();
     }
-    /**
-     * Main static method
-     * @param args 
-     */
     public static void main(String[] args) {
         launch(args);
     }

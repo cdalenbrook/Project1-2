@@ -85,7 +85,8 @@ public class GameMenu extends VBox{
         graph3D.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent e) {
-             }
+                
+            }
         });
         Graph2D.setOnAction(new EventHandler<ActionEvent>(){
             @Override
