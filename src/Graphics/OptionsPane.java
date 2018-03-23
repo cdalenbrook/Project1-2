@@ -1,5 +1,9 @@
 package Graphics;
 
+import javafx.animation.AnimationTimer;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -12,7 +16,11 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
-import Physics.Physics;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
 
 /**
  * This class creates a GridPane with options for shooting the ball.
@@ -25,8 +33,11 @@ public class OptionsPane extends GridPane{
     private Slider angle;
     private Game2D game;
     
-    public OptionsPane(Game2D game){
-        this.game = game;
+    private int amplification;
+    private int rangeX;
+    private int rangeY;
+    
+    public OptionsPane(){
         //create a button
         Button shoot = new Button("Shoot");
         //some css style thins, font is 22 Arial, base is button color
@@ -39,14 +50,59 @@ public class OptionsPane extends GridPane{
         shoot.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent e){
-                Physics physics = new Physics(velocity.getValue()*1000, angle.getValue(), game);
-                physics.startMoving();
+                double startX = game.getBall().getCenterX();
+                double startY = game.getBall().getCenterY();
+                
+                Timeline timeline = new Timeline();
+                timeline.setCycleCount(1);
+                
+                AnimationTimer timer = new AnimationTimer() {
+                    @Override
+                    public void handle(long l){
+                        double x = game.getBall().getCenterX() - amplification;
+                        double y = game.getBall().getCenterY() - amplification;
+                        double height = ((0.1*x) + (0.03*(Math.pow(x, 2.0))) + (0.2*y));
+                        System.out.println(height);
+                        if(height < 0){
+                            
+                            timeline.stop();
+                            game.getBall().setCenterX(startX);
+                            game.getBall().setCenterY(startY);
+                            game.setLine();
+                            
+                        }
+                    }
+                };
+                
+                KeyValue keyValueX = new KeyValue(game.getBall().centerXProperty(), game.getLine().getEndX());
+                KeyValue keyValueY = new KeyValue(game.getBall().centerYProperty(), game.getLine().getEndY());
+                
+                EventHandler onFinished = new EventHandler<ActionEvent>() {
+                    public void handle(ActionEvent t){
+                        game.setLineTest();
+                    }
+                };
+                Duration duration = Duration.millis(2000);
+                
+                KeyFrame keyFrame = new KeyFrame(duration, onFinished, keyValueX, keyValueY);
+ 
+                timeline.getKeyFrames().add(keyFrame);
+ 
+                timeline.play();
+                timer.start();
         }});
         
         add(shoot, 1, 0);
         add(force(), 0, 0);
         setHgap(20);
         setAlignment(Pos.CENTER);
+        setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, new Insets(15, 15, 15, 15))));
+        
+    }
+    public void setData(int amplification, int rangeX, int rangeY){
+        this.amplification = amplification;
+        this.rangeX = rangeX;
+        this.rangeY = rangeY;
     }
     /**
      * Create a BorderPane with options to control velocity and angle
@@ -97,7 +153,7 @@ public class OptionsPane extends GridPane{
         pane.add(angleText, 2, 0);
         pane.setHalignment(angleText, HPos.CENTER);
 
-        angle = new Slider(-90,90,0);
+        angle = new Slider(-180,180,0);
         angle.setShowTickLabels(true);
         angle.setShowTickMarks(true);
         angle.setMajorTickUnit(30);
@@ -122,5 +178,8 @@ public class OptionsPane extends GridPane{
         });
         
         return pane;
+    }
+    public void setGame(Game2D game){
+        this.game = game;
     }
 }
