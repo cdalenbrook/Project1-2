@@ -1,113 +1,190 @@
 package Menu;
 
-import Graphics.OptionsPane;
+import Graphics.Graph3D;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.geometry.Rectangle2D;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.stage.Screen;
-import javafx.stage.Stage;
-import minigolf.Main;
 
-public class GameMenu extends VBox{
+/**
+ * This class creates a GridPane with options for shooting the ball.
+ * @author Jordan, Charlotte
+ * @version 1.0
+ * @date 20.03
+ */
+public class GameMenu extends GridPane{
+    private Slider velocity;
+    private Slider angle;
+    
+    private Graph3D graph;
+    
     public GameMenu(){
-        Label exampleF = new Label("Example function:");
-        exampleF.setFont(new Font("Arial", 22));
-        
-        Button graph2D = new Button("2D TOP VIEW");
-        graph2D.setMinSize(150, 50);
-        graph2D.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
-        graph2D.setFocusTraversable(false);
+        //create a button
+        Button shoot = new Button("Shoot");
+        CheckBox withoutPhysics = new CheckBox("Without physics");
+        //some css style thins, font is 22 Arial, base is button color
+        shoot.setStyle("-fx-font: 22 arial; -fx-base: #6495ED");
+        //setsize
+        shoot.setMinSize(200, 50);
+        //using keys like up down etc., won't trigger the button
+        shoot.setFocusTraversable(false);
+        //add action to the button
+        shoot.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent e){
+                /* startX = game.getBall().getCenterX();
+                startY = game.getBall().getCenterY();
+                Timeline timeline = new Timeline();
+                Physics physics = new Physics(velocity.getValue(), angle.getValue(), game);
+                if(!withoutPhysics.isSelected()){
+                    physics.startMoving();
+                }
+                else{
+                    timeline.setCycleCount(1);  
+                    KeyValue keyValueX = new KeyValue(game.getBall().centerXProperty(), game.getLine().getEndX());
+                    KeyValue keyValueY = new KeyValue(game.getBall().centerYProperty(), game.getLine().getEndY());
 
-        Button graph3D = new Button("3D VIEW");
-        graph3D.setMinSize(150, 50);
-        graph3D.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
-        graph3D.setFocusTraversable(false);
-        
-        
-        Label customF = new Label("Custom function:");
-        customF.setFont(new Font("Arial", 22));
-        
-        Button Graph2D = new Button("2D TOP VIEW");
-        Graph2D.setMinSize(150, 50);
-        Graph2D.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
-        Graph2D.setFocusTraversable(false);
+                    EventHandler onFinished = new EventHandler<ActionEvent>() {
+                        public void handle(ActionEvent t){
+                            game.setLine();
+                            startX = game.getBall().getCenterX();
+                            startY = game.getBall().getCenterY();
+                        }
+                    };
+                    Duration duration = Duration.millis(2000);
 
-        Button Graph3D = new Button("3D VIEW");
-        Graph3D.setMinSize(150, 50);
-        Graph3D.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
-        Graph3D.setFocusTraversable(false);
-        
-        Button exit = new Button("Exit");
-        exit.setMinSize(150, 50);
-        exit.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
-        exit.setFocusTraversable(false);
+                    KeyFrame keyFrame = new KeyFrame(duration, onFinished, keyValueX, keyValueY);
 
+                    timeline.getKeyFrames().add(keyFrame);
 
+                    timeline.play(); 
+                }
+                
+                AnimationTimer timer = new AnimationTimer() {
+                    @Override
+                    public void handle(long l){
+                        double x = -((game.getBall().getCenterX() - rangeX + xMax)/300);
+                        double y = -((game.getBall().getCenterY() - rangeY + yMax)/300);
+                        double height = ((0.1*x) + (0.03*(Math.pow(x, 2.0))) + (0.2*y));
+                        if(height < 0 || game.getBall().getCenterX() < 0 || game.getBall().getCenterY() < 0
+                                || game.getBall().getCenterX() > rangeX || game.getBall().getCenterY() > rangeY){
+                            
+                            timeline.stop();
+                            this.stop();
+                            //physics.stop();
+                            game.getBall().setCenterX(startX);
+                            game.getBall().setCenterY(startY);
+                            game.setLine();
+                            
+                        }
+                    }
+                };
+                timer.start(); */
+        }});
+        VBox vbox = new VBox();
+        vbox.getChildren().addAll(shoot, withoutPhysics);
+        vbox.setAlignment(Pos.CENTER);
+        vbox.setSpacing(7.5);
+        add(vbox, 1, 0);
+        add(force(), 0, 0);
+        setHgap(20);
         setAlignment(Pos.CENTER);
-        setSpacing(10);
-        getChildren().addAll(exampleF, graph2D, graph3D, customF, Graph2D, Graph3D, exit);
+        setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, new Insets(15, 15, 15, 15))));
         
-        graph2D.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent e) {
-                Stage primaryStage = Main.getStage();
-                
-                BorderPane pane = new BorderPane();
-                Scene scene = new Scene(pane);
-                OptionsPane options = new OptionsPane();
-                DataMenu data = new DataMenu(pane, scene, options);
-                pane.setRight(data);
-                pane.setAlignment(pane, Pos.CENTER_LEFT);
-                pane.setBottom(options);
-                pane.setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, Insets.EMPTY)));
-                
-                primaryStage.setScene(scene);
-                primaryStage.setWidth(1500);
-                primaryStage.setHeight(900);
-                
-                Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
-                primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
-                primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
-            }
-        });
-        graph3D.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent e) {
-                
-            }
-        });
-        Graph2D.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent e) {
+    }
+    /**
+     * Create a GridPane with options to control velocity and angle
+     * @return GridPane
+     */
+    public GridPane force(){
+        GridPane pane = new GridPane();
+        pane.setHgap(20); //horizontal gap in pixels => that's what you are asking for
+        pane.setVgap(20); //vertical gap in pixels
+        pane.setPadding(new Insets(10, 10, 10, 10));
 
+        //Velocity text and slider:
+        Label velocityText = new Label("Specify Velocity:");
+        velocityText.setFont(new Font("Arial", 20));
+
+        pane.add(velocityText, 1, 0);
+        pane.setHalignment(velocityText, HPos.CENTER);
+
+        velocity = new Slider(0,20,0);
+        velocity.setShowTickLabels(true);
+        velocity.setShowTickMarks(true);
+        velocity.setMajorTickUnit(2);
+        velocity.setMinorTickCount(1);
+        velocity.setBlockIncrement(1);
+        velocity.setFocusTraversable(false);
+
+        pane.add(velocity, 1, 1);
+
+        Label velocityValue = new Label("Velocity Selected: 5" );
+        pane.setHalignment(velocityValue, HPos.CENTER);
+        pane.add(velocityValue, 1, 2);
+
+
+        velocity.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                // set force of ball to the force it will be hit with
+                velocityValue.textProperty().setValue(
+                        String.valueOf("Velocity Selected: " + (int) velocity.getValue()));
             }
         });
-        Graph3D.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent e) {
-             }
-        });
-        exit.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent e) {
-                Stage primaryStage = Main.getStage();
-                primaryStage.close();
-                System.exit(0);
 
-             }
+
+        //Angle text and slider:
+        Label angleText = new Label("Specify Angle:");
+        angleText.setFont(new Font("Arial", 20));
+
+        pane.add(angleText, 2, 0);
+        pane.setHalignment(angleText, HPos.CENTER);
+
+        angle = new Slider(-180,180,0);
+        angle.setShowTickLabels(true);
+        angle.setShowTickMarks(true);
+        angle.setMajorTickUnit(30);
+        angle.setMinorTickCount(5);
+        angle.setBlockIncrement(5);
+        angle.setFocusTraversable(false);
+
+        pane.add(angle, 2, 1);
+
+        Label angleValue = new Label("Angle Selected: 0°" );
+        pane.setHalignment(angleValue, HPos.CENTER);
+        pane.add(angleValue, 2, 2);
+
+        angle.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                                Number old_val, Number new_val) {
+                // set angle of ball to the angle it will be hit with
+                angleValue.textProperty().setValue(
+                        String.valueOf("Angle Selected: " + (int) angle.getValue() + "°"));
+                double LineEndX = graph.LineRotateX*Math.cos(Math.toRadians(-angle.getValue())) - graph.LineRotateZ*Math.sin(Math.toRadians(-angle.getValue()));
+                double LineEndZ = graph.LineRotateZ*Math.cos(Math.toRadians(-angle.getValue())) + graph.LineRotateX*Math.sin(Math.toRadians(-angle.getValue()));
+                //System.out.println(LineEndX + " " + LineEndZ);
+                graph.setCoordinates(LineEndX, LineEndZ);
+            }
         });
-        setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, Insets.EMPTY)));
+        
+        return pane;
+    }
+    public void setGraph(Graph3D graph){
+        this.graph = graph;
     }
 }

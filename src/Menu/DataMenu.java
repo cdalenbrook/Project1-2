@@ -1,25 +1,20 @@
 package Menu;
 
-import Graphics.Function;
-import Graphics.Game2D;
-import Graphics.Graph2D;
-import Graphics.OptionsPane;
+import Graphics.CameraController;
+import Graphics.Graph3D;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.SceneAntialiasing;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 /**
@@ -30,215 +25,219 @@ import javafx.stage.Stage;
  */
 
 public class DataMenu extends VBox{
-    public TextField StartX;
-    public TextField StartY;
-    public TextField EndX;
-    public TextField EndY;
-    public TextField Amplification;
-    public TextField InitialX;
-    public TextField InitialY;
-    public TextField GoalX;
-    public TextField GoalY;
-    private BorderPane pane;
+    //private int minX, maxX, minY, maxY, amplification, heightPrecision, ballX, ballY, goalX, goalY;
+    private boolean focus = true;
     
-    private DataMenu data;
-    private Scene scene;
-    private OptionsPane options;
-    
-    
-    public DataMenu(BorderPane pane, Scene scene, OptionsPane options){
-        data = this;
-        this.options = options;
-        this.scene = scene;
-        this.pane = pane;
-        Label rangeX = new Label("X range:");
+    public DataMenu(BorderPane pane, Scene scene, GameMenu options, boolean example){
+        
+        Label rangeX = new Label("Range of \"x\" [min, max]:");
         rangeX.setFont(new Font("Arial", 18));
         
-        StartX = new TextField();
-        StartX.setPrefColumnCount(10);
-        //StartX.setFocusTraversable(false);
+        TextField RangeX = new TextField();
+        RangeX.setPrefColumnCount(10);
+        RangeX.setFocusTraversable(focus);
         
-        EndX = new TextField();
-        EndX.setPrefColumnCount(10);
-        //EndX.setFocusTraversable(false);
-        
-        Label rangeY = new Label("Y range:");
+        Label rangeY = new Label("Range of \"y\" [min, max]:");
         rangeY.setFont(new Font("Arial", 18));
         
-        StartY = new TextField();
-        StartY.setPrefColumnCount(10);
-        //StartY.setFocusTraversable(false);
+        TextField RangeY = new TextField();
+        RangeY.setPrefColumnCount(10);
+        RangeY.setFocusTraversable(focus);
         
-        EndY = new TextField();
-        EndY.setPrefColumnCount(10);
-        //EndY.setFocusTraversable(false);
+        Label amplification1 = new Label("Set image and 3D graph");
+        amplification1.setFont(new Font("Arial", 18));
         
-        Label amplification = new Label("Amplification:");
-        amplification.setFont(new Font("Arial", 18));
+        Label amplification2 = new Label("amplification [image, 3D]:");
+        amplification2.setFont(new Font("Arial", 18));
         
-        Amplification = new TextField();
+        TextField Amplification = new TextField();
         Amplification.setPrefColumnCount(10);
-        //Amplification.setFocusTraversable(false);
+        Amplification.setFocusTraversable(focus);
         
-        Label initial = new Label("Starting coordinates");
-        initial.setFont(new Font("Arial", 18));
+        Label height = new Label("Set height precision:");
+        height.setFont(new Font("Arial", 18));
         
-        InitialX = new TextField();
-        InitialX.setPrefColumnCount(10);
-        //InitialX.setFocusTraversable(false);
+        TextField Height = new TextField();
+        Height.setPrefColumnCount(10);
+        Height.setFocusTraversable(focus);
         
-        InitialY = new TextField();
-        InitialY.setPrefColumnCount(10);
-        //InitialY.setFocusTraversable(false);
+        Label ball = new Label("Ball starting coordinates [x, y]:");
+        ball.setFont(new Font("Arial", 18));
         
-        Label goal = new Label("Goal coordinates");
+        TextField Ball = new TextField();
+        Ball.setPrefColumnCount(10);
+        Ball.setFocusTraversable(focus);
+        
+        Label goal = new Label("Goal coordinates [x, y]:");
         goal.setFont(new Font("Arial", 18));
         
-        GoalX = new TextField();
-        GoalX.setPrefColumnCount(10);
-        //GoalX.setFocusTraversable(false);
-        
-        GoalY = new TextField();
-        GoalY.setPrefColumnCount(10);
-        //GoalY.setFocusTraversable(false);
+        TextField Goal = new TextField();
+        Goal.setPrefColumnCount(10);
+        Goal.setFocusTraversable(focus);
         
         Button draw = new Button("Draw");
-        draw.setMinSize(150, 50);
-        draw.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
-        draw.setFocusTraversable(false);
+        draw.setMinSize(200, 50);
+        draw.setStyle("-fx-font: 24 arial; -fx-base: #6495ED;");
+        draw.setFocusTraversable(focus);
+
+        Button help = new Button("Instructions");
+        help.setMinSize(200, 50);
+        help.setStyle("-fx-font: 24 arial; -fx-base: #6495ED;");
+        help.setFocusTraversable(focus);
+        
+        if(example){
+            RangeX.setText("-2, 2");
+            RangeY.setText("-2, 2");
+            Amplification.setText("50, 100");
+            Height.setText("1");
+            Ball.setText("0, 0");
+            Goal.setText("1, 1");
+        }
         draw.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent e) {
-                Function function = new Function(Integer.parseInt(StartX.getText()), Integer.parseInt(EndX.getText()),
-                        Integer.parseInt(StartY.getText()), Integer.parseInt(EndY.getText()), Integer.parseInt(Amplification.getText()));
-                Graph2D image = new Graph2D(Integer.parseInt(StartX.getText()), Integer.parseInt(EndX.getText()),
-                        Integer.parseInt(StartY.getText()), Integer.parseInt(EndY.getText()), Integer.parseInt(Amplification.getText()), function);
-        
-                ImageView iv = new ImageView(image.getImage());
-                iv.setRotate(180);
-                StackPane stack = new StackPane();
-                stack.setAlignment(Pos.CENTER);
-                Group group = new Group();
-                group.getChildren().add(iv);
-                stack.getChildren().add(group);
+                int[] dataX = calculate(RangeX.getText());
+                int minX = dataX[0];
+                int maxX = dataX[1];
+                int[] dataY = calculate(RangeX.getText());
+                int minY = dataY[0];
+                int maxY = dataY[1];
+                int[] dataAmplification = calculate(Amplification.getText());
+                int ImageAmplification = dataAmplification[0];
+                int GraphAmplification = dataAmplification[1];
+                int heightPrecision = Integer.parseInt(Height.getText().trim());
+                int[] dataBall = calculate(Ball.getText());
+                int ballX = dataBall[0];
+                int ballY = dataBall[1];
+                int[] dataGoal = calculate(Goal.getText());
+                int goalX = dataGoal[0];
+                int goalY = dataGoal[1];
                 
-                int rangeX = ((Integer.parseInt(EndX.getText()) - (Integer.parseInt(StartX.getText())))*(Integer.parseInt(Amplification.getText())));
-                int rangeY = ((Integer.parseInt(EndY.getText()) - (Integer.parseInt(StartY.getText())))*(Integer.parseInt(Amplification.getText())));
-                int xMax = Integer.parseInt(EndX.getText())*Integer.parseInt(Amplification.getText());
-                int yMax = Integer.parseInt(EndY.getText())*Integer.parseInt(Amplification.getText());
                 
+                Graph3D graph = new Graph3D(minX, maxX, minY, maxY, ImageAmplification, GraphAmplification, heightPrecision, ballX, ballY, goalX, goalY);
+                options.setGraph(graph);
+                scene.addEventFilter(KeyEvent.KEY_PRESSED, new CameraController(graph));
                 
-                Game2D ball = new Game2D(Integer.parseInt(Amplification.getText())/30, Integer.parseInt(Amplification.getText())*Integer.parseInt(Amplification.getText())/100);
-                options.setGame(ball);
-                ball.getBall().setCenterX((Integer.parseInt(StartX.getText()) - Integer.parseInt(InitialX.getText()))*Integer.parseInt(Amplification.getText()) + rangeX);
-                ball.getBall().setCenterY((Integer.parseInt(StartY.getText()) - Integer.parseInt(InitialY.getText()))*Integer.parseInt(Amplification.getText()) + rangeY);
-                ball.getFinish().setCenterX((Integer.parseInt(StartX.getText()) - Integer.parseInt(GoalX.getText()))*Integer.parseInt(Amplification.getText()) + rangeX);
-                ball.getFinish().setCenterY((Integer.parseInt(StartY.getText()) - Integer.parseInt(GoalY.getText()))*Integer.parseInt(Amplification.getText()) + rangeY);
+                scene.setOnMousePressed(event ->{
+                    if(event.getSceneX() <= 860 && event.getSceneY() <= 560){
+                        focus = false;
+                    }
+                    else{
+                        focus = true;
+                    }
+                    RangeX.setFocusTraversable(focus);
+                    RangeY.setFocusTraversable(focus);
+                    Amplification.setFocusTraversable(focus);
+                    Height.setFocusTraversable(focus);
+                    Ball.setFocusTraversable(focus);
+                    Goal.setFocusTraversable(focus);
+                    draw.setFocusTraversable(focus);
+                    help.setFocusTraversable(focus);
+                    
+                });
                 
-                options.setData(Integer.parseInt(Amplification.getText()), rangeX, rangeY, xMax, yMax);
-                group.getChildren().addAll(ball.getBall(), ball.getFinish(), ball.setLine());
-                //PerspectiveCamera camera = new PerspectiveCamera(true);
-                //add possible rotations and position of camera
-                //camera.getTransforms().addAll(new Translate(CameraX, CameraY, CameraZ));
-
-                //stack.getChildren().add(camera);
-
-                //create a Scene from the group
-                //SubScene subScene = new SubScene(stack, 1400, 700, true, SceneAntialiasing.BALANCED);
-                //subScene.setCamera(camera);
-                //scene.addEventFilter(KeyEvent.KEY_PRESSED, new CameraController(data));
-                
-                pane.setCenter(stack);
-                pane.setAlignment(stack, Pos.CENTER);
+                pane.setCenter(graph);
+                pane.setMargin(graph, new Insets(10, 10, 10, 10));
+                pane.setAlignment(graph, Pos.CENTER);
             }
 
         });
-        
-        setSpacing(10);
-        setAlignment(Pos.CENTER);
-
-        Button help = new Button("Help");
-        help.setMinSize(150, 50);
-        help.setStyle("-fx-font: 22 arial; -fx-base: #8FBC8F;");
-        setSpacing(10);
-        setAlignment(Pos.CENTER);
 
         help.setOnAction(new EventHandler<ActionEvent>(){
             public void handle(ActionEvent e) {
                 loadHelpPage();
             }
         });
-
-
-        getChildren().addAll(rangeX, StartX, EndX, rangeY, StartY, EndY, amplification,
-                Amplification, initial, InitialX, InitialY, goal, GoalX, GoalY, draw, help);
+        
+        
+        
+        setSpacing(10);
+        setAlignment(Pos.CENTER);
+        getChildren().addAll(rangeX, RangeX, rangeY, RangeY, amplification1, amplification2, Amplification, height, Height, ball, Ball, goal, Goal, draw, help);
         setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, new Insets(15, 15, 15, 15))));
 
-
     }
-
+    
+    public int[] calculate(String s){
+        char[] string = s.toCharArray();
+        int[] data = new int[2];
+        int comma = 0;
+        for(int v = 0; v < string.length; v++){
+            if(string[v] == ','){
+                comma = v;
+                v = string.length - 1;
+            }
+        }
+        char[] first = new char[comma];
+        char[] second = new char[string.length - comma];
+        for(int v = 0; v < comma; v++){
+            first[v] = string[v];
+        }
+        for(int v = 0; v + 1 < string.length - comma; v++){
+            second[v] = string[comma + v + 1];
+        }
+        data[0] = Integer.parseInt(new String(first).trim());
+        data[1] = Integer.parseInt(new String(second).trim());
+        
+        return data;
+    }
+    
     /**
      * Method that shows the helper window that is opened when the help button is pressed
      */
     public void loadHelpPage(){
-        GridPane pane = new GridPane();
-        pane.setHgap(20); //horizontal gap in pixels => that's what you are asking for
-        pane.setVgap(20); //vertical gap in pixels
+        VBox pane = new VBox();
+        pane.setSpacing(10);
         pane.setPadding(new Insets(10, 10, 10, 10));
 
-        Label xRange = new Label("X Range");
-        xRange.setFont(new Font("Arial", 20));
-        pane.add(xRange, 1, 0);
-        pane.setHalignment(xRange, HPos.CENTER);
+        Label range1 = new Label("To display the function in a given range:");
+        range1.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 
-        Label xRangeDes = new Label("Height of the course (x1, x2)");
-        xRangeDes.setFont(new Font("Arial", 20));
-        pane.add(xRangeDes, 2, 0);
-        pane.setHalignment(xRangeDes, HPos.CENTER);
+        Label range2 = new Label("Input \"X\" and \"Y\" range as integers, starting with the minimum and separating them with a comma.");
+        range2.setFont(new Font("Arial", 20));
+        
+        HBox range = new HBox();
+        Label range3 = new Label("\"X\" is width and \"Y\" is depth.");
+        range3.setFont(new Font("Arial", 20));
+        range.getChildren().add(range3);
 
-        Label yRange = new Label("Y Range");
-        yRange.setFont(new Font("Arial", 20));
-        pane.add(yRange, 1, 1);
-        pane.setHalignment(yRange, HPos.CENTER);
+        Label range4 = new Label("Example: \"-1, 1\"");
+        range4.setFont(new Font("Arial", 20));
+        range.getChildren().add(range4);
+        range.setAlignment(Pos.CENTER);
+        range.setSpacing(10);
 
-        Label yRangeDes = new Label("Width of the course (y1, y2)");
-        yRangeDes.setFont(new Font("Arial", 20));
-        pane.add(yRangeDes, 2, 1);
-        pane.setHalignment(yRangeDes, HPos.CENTER);
+        Label amplification1 = new Label("To set 3D graph precision and image precision:");
+        amplification1.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 
-        Label amp = new Label("Amplification");
-        amp.setFont(new Font("Arial", 20));
-        pane.add(amp, 1, 2);
-        pane.setHalignment(amp, HPos.CENTER);
+        Label amplification2 = new Label("Input integers, separated with a comma in amplification texfield.");
+        amplification2.setFont(new Font("Arial", 20));
+        
+        Label amplification3 = new Label("Amplification means number of points taken between two integer points.");
+        amplification3.setFont(new Font("Arial", 20));
+        
+        Label amplification4 = new Label("Note: range of x multiplied by amplification should not be more than 600, because execution time grows exponentially!");
+        amplification4.setFont(new Font("Arial", 20));
 
-        Label ampDes = new Label("How zoomed in you want the image");
-        ampDes.setFont(new Font("Arial", 20));
-        pane.add(ampDes, 2, 2);
-        pane.setHalignment(ampDes, HPos.CENTER);
+        Label amplification5 = new Label("Example input for range from -1 to 1: \"50, 100\"");
+        amplification5.setFont(new Font("Arial", 20));
+        
+        Label height1 = new Label("Height precision is used for debugging, dividing the height by an integer");
+        height1.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        
+        Label ball = new Label("Ball starting coordinates are set as integer points in the graph. Example: \"0, 0\"");
+        ball.setFont(Font.font("Arial", FontWeight.BOLD, 20));
 
-        Label startCord = new Label("Starting coordinates");
-        startCord.setFont(new Font("Arial", 20));
-        pane.add(startCord, 1, 3);
-        pane.setHalignment(startCord, HPos.CENTER);
+        Label goal = new Label("Goal coordinates are set as integer points in the graph. Example: \"1, 1\"");
+        goal.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+        
+        pane.setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, new Insets(0, 0, 0, 0))));
 
-        Label startCordDes = new Label("Where the ball starts from (x, y)");
-        startCordDes.setFont(new Font("Arial", 20));
-        pane.add(startCordDes, 2, 3);
-        pane.setHalignment(startCordDes, HPos.CENTER);
-
-        Label goalCord = new Label("Goal Coordinates");
-        goalCord.setFont(new Font("Arial", 20));
-        pane.add(goalCord, 1, 4);
-        pane.setHalignment(goalCord, HPos.CENTER);
-
-        Label goalCordDes = new Label("Where the ball should land to finish the course (x, y)");
-        goalCordDes.setFont(new Font("Arial", 20));
-        pane.add(goalCordDes, 2, 4);
-        pane.setHalignment(goalCordDes, HPos.CENTER);
-
-        Scene scene = new Scene(pane, 700, 250);
+        pane.getChildren().addAll(range1, range2, range, amplification1, amplification2, amplification3, amplification4, height1, ball, goal);
+        pane.setAlignment(Pos.CENTER);
+        Scene scene = new Scene(pane, 1100, 350);
         Stage stage = new Stage();
-        stage.setTitle("Help");
+        stage.setTitle("Instructions");
         stage.setScene(scene);
         stage.show();
     }

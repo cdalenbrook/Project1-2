@@ -12,10 +12,6 @@ import javafx.scene.input.KeyEvent;
 public class CameraController implements EventHandler<KeyEvent>{
     private Graph3D map;
     
-    private double angleY = 0;
-    private double angleX = 0;
-    private double angleZ = 0;
-    
     private double zoom = 0;
     /**
      * Constructor takes as a parameter the MapDrawer so it can call methods in it
@@ -31,28 +27,22 @@ public class CameraController implements EventHandler<KeyEvent>{
     @Override
     public void handle(KeyEvent event){
         if(event.getCode() == KeyCode.RIGHT){
-            angleY+= 10;
-            map.rotateY(angleY);
+            map.rotateY(10);
         }
         else if(event.getCode() == KeyCode.LEFT){
-            angleY-= 10;
-            map.rotateY(angleY);
+            map.rotateY(-10);
         }
         else if(event.getCode() == KeyCode.UP){
-            angleX+= 10;
-            map.rotateX(angleX);
+            map.rotateX(10);
         }
         else if(event.getCode() == KeyCode.DOWN){
-            angleX-= 10;
-            map.rotateX(angleX);
+            map.rotateX(-10);
         }
         else if(event.getCode() == KeyCode.Z){
-            angleZ+= 10;
-            map.rotateZ(angleZ);
+            map.rotateZ(10);
         }
         else if(event.getCode() == KeyCode.X){
-            angleZ-= 10;
-            map.rotateZ(angleZ);
+            map.rotateZ(-10);
         }
         else if(event.getCode() == KeyCode.N){
             zoom+= 1;
@@ -64,6 +54,18 @@ public class CameraController implements EventHandler<KeyEvent>{
         }
         else if(event.getCode() == KeyCode.P){
             map.print();
+        }
+        else if(event.getCode() == KeyCode.C){
+            map.CameraY(1);
+        }
+        else if(event.getCode() == KeyCode.V){
+            map.CameraY(-1);
+        }
+        else if(event.getCode() == KeyCode.H){
+            map.CameraX(1);
+        }
+        else if(event.getCode() == KeyCode.J){
+            map.CameraX(-1);
         }
     }    
 }

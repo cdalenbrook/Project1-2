@@ -1,0 +1,11 @@
+Level: 0
+Function: 0.1x 0.03pow(x,2) 0.2y
+X: -2 2
+Y: -2 2
+Amplification: 50 100
+Precision: 1
+Ball: 0 0
+Goal: 1 1
+Tree:
+Sand:
+ 

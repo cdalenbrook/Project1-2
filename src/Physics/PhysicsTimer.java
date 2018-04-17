@@ -1,4 +1,4 @@
-package Physics;
+/* package Physics;
 //import java.util.Scanner;
 import Graphics.Game2D;
 import java.util.Timer;
@@ -88,4 +88,4 @@ public class PhysicsTimer extends Physics{
       timer.cancel();
   }
   
-}
+} */

@@ -1,16 +1,16 @@
 package minigolf;
 
+import Setup.DataReader;
 import Menu.StartMenu;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -31,8 +31,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        BorderPane pane = new BorderPane();
-        pane.setCenter(new StartMenu());
+        
+        StackPane pane = new StackPane();
+        pane.getChildren().add(new StartMenu());
         pane.setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, Insets.EMPTY)));
         
         Scene scene = new Scene(pane);
@@ -41,7 +42,7 @@ public class Main extends Application {
         primaryStage.setScene(scene);
         
         primaryStage.setWidth(325);
-        primaryStage.setHeight(325);
+        primaryStage.setHeight(425);
         
         Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
         primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);

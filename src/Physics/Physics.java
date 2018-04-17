@@ -1,4 +1,4 @@
-package Physics;
+/* package Physics;
 
 import Graphics.Game2D;
 
@@ -46,4 +46,4 @@ public class Physics{
       timerlistener.stop();
   }
 
-}
+} */

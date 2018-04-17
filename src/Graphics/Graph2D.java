@@ -1,5 +1,9 @@
 package Graphics;
 
+import Setup.DataReader;
+import Setup.Function;
+import Setup.FunctionType;
+import Setup.Level;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
@@ -12,7 +16,60 @@ import javafx.scene.paint.Color;
  */
 public class Graph2D {
     private WritableImage image;
-    
+    public Graph2D(int level, FunctionType functionType, Function function){
+        Level data = DataReader.getData().get(level);
+        double startX = data.getRangeX()[0];
+        double endX = data.getRangeX()[1];
+        double startZ = data.getRangeY()[0];
+        double endZ = data.getRangeY()[1];
+        
+        int amplification = 0;
+        switch(functionType){
+            case BUTTON: amplification = (int)(200/(endX - startX)); break;
+            case GRAPH: amplification = (int)(400/(endX - startX)); break;
+            case IMAGE: amplification = (int)(600/(endX - startX)); break;
+        }
+        int xMin = (int)startX*amplification;
+        int xMax = (int)endX*amplification;
+        int zMin = (int)startZ*amplification;
+        int zMax = (int)endZ*amplification;
+        
+        int xRange = xMax - xMin;
+        int zRange = zMax - zMin;
+        
+        image = new WritableImage(xRange, zRange);
+        PixelWriter pw = image.getPixelWriter();
+        for (int x = xMin; x < xMax; x++) {
+            for (int z = zMin; z < zMax; z++) {
+
+                float height = function.getHeight()[xRange + x - xMax][zRange + z - zMax];
+                
+                float min = function.getMin();
+                float max = function.getMax();
+                
+                Color color;
+                if(height < 0){
+                    double newHeight;
+                    if(min < -1){
+                        newHeight = normalizeValue(height, min, 0, 0., 1.);
+                    }
+                    else{
+                        newHeight = normalizeValue(height, -1, 0, 0., 1.);
+                    }
+                    color = Color.DARKBLUE.interpolate(Color.BLUE, newHeight);
+                    //color = Color.color(0, 0, 0).interpolate(Color.color(0, 178, 255), newHeight);
+                }
+                else{
+                    double newHeight = normalizeValue(height, 0, max, 0., 1.);
+                    color = Color.DARKGREEN.interpolate(Color.CHARTREUSE, newHeight);
+                    //color = Color.color(0, 102, 51).interpolate(Color.color(178, 255, 102), newHeight);
+
+                    
+                }
+                pw.setColor(x + xRange - xMax, z + zRange - zMax, color);
+            }
+        }
+    }    
     public Graph2D(int xmin, int xmax, int zmin, int zmax, int amplification, Function function){
         
         int xMin = xmin*amplification;
@@ -30,8 +87,8 @@ public class Graph2D {
 
                 float height = function.getHeight()[xRange + x - xMax][zRange + z - zMax];
                 
-                int min = function.getMin();
-                int max = function.getMax();
+                float min = function.getMin();
+                float max = function.getMax();
                 
                 Color color;
                 if(height < 0){
