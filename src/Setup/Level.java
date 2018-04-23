@@ -2,32 +2,39 @@ package Setup;
 
 import java.util.ArrayList;
 
+/**
+ * Class that represents each map and level
+ * @author Jordan
+ * @version 2.0
+ * @date 19.04.2018
+ */
 public class Level {
     private int level;
     private ArrayList<char[]> function;
     private double[] rangeX = new double[2];
     private double[] rangeY = new double[2];
-    private int[] amplification = new int[2];
-    private double precision;
     private double[] ball = new double[2];
     private double[] goal = new double[2];
-    private ArrayList<double[]> tree;
-    private ArrayList<double[]> sand;
+    private ArrayList<double[]> tree = new ArrayList<>();
+    private ArrayList<double[]> sand = new ArrayList<>();
     
+    /**
+     * Method that clones the class, to avoid reference errors.
+     * @return a cloned instance of this class
+     */
+    @Override
     public Level clone(){
-        Level level = new Level();
-        level.setLevel(this.getLevel());
-        level.setFunction(this.getFunction());
-        level.setRangeX(this.getRangeX());
-        level.setRangeY(this.getRangeY());
-        level.setAmplification(this.getAmplification());
-        level.setPrecision(this.getPrecision());
-        level.setBall(this.getBall());
-        level.setGoal(this.getGoal());
-        level.setTree(this.getTree());
-        level.setSand(this.getSand());
+        Level newLevel = new Level();
+        newLevel.setLevel(level);
+        newLevel.setFunction(cloneFunction(function));
+        newLevel.setRangeX(rangeX);
+        newLevel.setRangeY(rangeY);
+        newLevel.setBall(ball);
+        newLevel.setGoal(goal);
+        newLevel.setTree(cloneArrayList(tree));
+        newLevel.setSand(cloneArrayList(sand));
         
-        return level;
+        return newLevel;
     }
     
     public void setLevel(int level){
@@ -45,15 +52,7 @@ public class Level {
     public void setRangeY(double[] rangeY) {
         this.rangeY = rangeY;
     }
-
-    public void setAmplification(int[] amplification) {
-        this.amplification = amplification;
-    }
-
-    public void setPrecision(double precision) {
-        this.precision = precision;
-    }
-
+    
     public void setBall(double[] ball) {
         this.ball = ball;
     }
@@ -85,15 +84,7 @@ public class Level {
     public double[] getRangeY() {
         return rangeY;
     }
-
-    public int[] getAmplification() {
-        return amplification;
-    }
-
-    public double getPrecision() {
-        return precision;
-    }
-
+    
     public double[] getBall() {
         return ball;
     }
@@ -108,5 +99,27 @@ public class Level {
 
     public ArrayList<double[]> getSand() {
         return sand;
+    }
+    public ArrayList<char[]> cloneFunction(ArrayList<char[]> arrayList){
+        ArrayList<char[]> newArrayList = new ArrayList<>();
+        for(char[] part: arrayList){
+            char[] newPart = new char[part.length];
+            for(int i = 0; i < part.length; i++){
+                newPart[i] = part[i];
+            }
+            newArrayList.add(newPart);
+        }
+        return newArrayList;
+    }
+    public ArrayList<double[]> cloneArrayList(ArrayList<double[]> arrayList){
+        ArrayList<double[]> newArrayList = new ArrayList<>();
+        for(double[] part: arrayList){
+            double[] newPart = new double[2];
+            for(int i = 0; i < part.length; i++){
+                newPart[i] = part[i];
+            }
+            newArrayList.add(newPart);
+        }
+        return newArrayList;
     }
 }

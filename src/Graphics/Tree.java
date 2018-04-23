@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package Graphics;
 
 import javafx.scene.paint.Color;
@@ -12,8 +7,8 @@ import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 
 /**
- *
- * @author danyp
+ * This class creates a 3D representation of a tree.
+ * @author Jordan
  */
 public class Tree{
     private float w;
@@ -21,11 +16,12 @@ public class Tree{
     private float d;
     private MeshView TRUNK = new MeshView();
     private MeshView LEAVES = new MeshView();
+    
     /**
-     * Constructor will create a triangle mesh with points, textCoords, faces and faceSmoothingGroups
-     * @param w the width of the wanted box
-     * @param h the height of the wanted box
-     * @param d the depth of the wanted box
+     * Constructor will create a two triangle mesh with points, textCoords, faces and faceSmoothingGroups
+     * @param w the widest part of a tree
+     * @param h the height of the tree
+     * @param d the depth of the tree(length)
      */
     public Tree(float w, float h, float d) {
         this.w = w;
@@ -104,30 +100,32 @@ public class Tree{
         LEAVES.setCullFace(CullFace.NONE);
         
     }
-    
+    /**
+     * @return MeshView representing the trunk
+     */
     public MeshView getTrunk(){
         return TRUNK;
     }
+    /**
+     * @return MeshView representing the leaves
+     */
     public MeshView getLeaves(){
         return LEAVES;
     }
     /**
-     * Get the width of the box
-     * @return the width of the box
+     * @return the width
      */
     public float getWidth(){
         return w;
     }
     /**
-     * Get the height of the box
-     * @return the height of the box
+     * @return the height
      */
     public float getHeight(){
         return h;
     }
     /**
-     * Get the depth of the box
-     * @return the depth of the box
+     * @return the depth
      */
     public float getDepth(){
         return d;

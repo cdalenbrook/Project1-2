@@ -1,6 +1,10 @@
 package Menu;
 
 import Graphics.Graph3D;
+import Physics.Physics;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -8,6 +12,8 @@ import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
@@ -17,8 +23,13 @@ import javafx.scene.text.Font;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.stage.Screen;
+import javafx.stage.Stage;
+import javafx.util.Duration;
+import minigolf.Main;
 
 /**
  * This class creates a GridPane with options for shooting the ball.
@@ -29,52 +40,47 @@ import javafx.scene.paint.Color;
 public class GameMenu extends GridPane{
     private Slider velocity;
     private Slider angle;
-    
     private Graph3D graph;
     
+    /**
+     * Constructor
+     */
     public GameMenu(){
-        //create a button
         Button shoot = new Button("Shoot");
         CheckBox withoutPhysics = new CheckBox("Without physics");
-        //some css style thins, font is 22 Arial, base is button color
         shoot.setStyle("-fx-font: 22 arial; -fx-base: #6495ED");
-        //setsize
         shoot.setMinSize(200, 50);
-        //using keys like up down etc., won't trigger the button
         shoot.setFocusTraversable(false);
-        //add action to the button
         shoot.setOnAction(new EventHandler<ActionEvent>(){
             @Override
             public void handle(ActionEvent e){
-                /* startX = game.getBall().getCenterX();
-                startY = game.getBall().getCenterY();
                 Timeline timeline = new Timeline();
-                Physics physics = new Physics(velocity.getValue(), angle.getValue(), game);
+                Physics physics = new Physics(velocity.getValue(), angle.getValue());
                 if(!withoutPhysics.isSelected()){
                     physics.startMoving();
                 }
                 else{
                     timeline.setCycleCount(1);  
-                    KeyValue keyValueX = new KeyValue(game.getBall().centerXProperty(), game.getLine().getEndX());
-                    KeyValue keyValueY = new KeyValue(game.getBall().centerYProperty(), game.getLine().getEndY());
-
+                    KeyValue keyValueX = new KeyValue(Graph3D.ball.translateXProperty(), Graph3D.LineEndX);
+                    KeyValue keyValueY = new KeyValue(Graph3D.ball.translateYProperty(), Graph3D.LineEndY);
+                    KeyValue keyValueZ = new KeyValue(Graph3D.ball.translateZProperty(), Graph3D.LineEndZ);
+                   
                     EventHandler onFinished = new EventHandler<ActionEvent>() {
                         public void handle(ActionEvent t){
-                            game.setLine();
-                            startX = game.getBall().getCenterX();
-                            startY = game.getBall().getCenterY();
+                            graph.moveBallTest();
+                            angle.setValue(0);
                         }
                     };
                     Duration duration = Duration.millis(2000);
 
-                    KeyFrame keyFrame = new KeyFrame(duration, onFinished, keyValueX, keyValueY);
+                    KeyFrame keyFrame = new KeyFrame(duration, onFinished, keyValueX, keyValueY, keyValueZ);
 
                     timeline.getKeyFrames().add(keyFrame);
 
                     timeline.play(); 
                 }
                 
-                AnimationTimer timer = new AnimationTimer() {
+                /* AnimationTimer timer = new AnimationTimer() {
                     @Override
                     public void handle(long l){
                         double x = -((game.getBall().getCenterX() - rangeX + xMax)/300);
@@ -95,13 +101,49 @@ public class GameMenu extends GridPane{
                 };
                 timer.start(); */
         }});
-        VBox vbox = new VBox();
-        vbox.getChildren().addAll(shoot, withoutPhysics);
-        vbox.setAlignment(Pos.CENTER);
-        vbox.setSpacing(7.5);
-        add(vbox, 1, 0);
+        
+        Button quit = new Button("Quit");
+        quit.setStyle("-fx-font: 22 arial; -fx-base: #6495ED");
+        quit.setMinSize(200, 50);
+        quit.setFocusTraversable(false);
+        quit.setOnAction(new EventHandler<ActionEvent>(){
+            @Override
+            public void handle(ActionEvent e){
+                Stage primaryStage = Main.primaryStage;
+                
+                StackPane pane = new StackPane();
+                pane.getChildren().add(new StartMenu());
+                pane.setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, Insets.EMPTY)));
+
+                Scene scene = new Scene(pane);
+
+                primaryStage.setTitle("Crazy Putting!");
+                primaryStage.setScene(scene);
+
+                primaryStage.setWidth(325);
+                primaryStage.setHeight(425);
+
+                Rectangle2D primScreenBounds = Screen.getPrimary().getVisualBounds();
+                primaryStage.setX((primScreenBounds.getWidth() - primaryStage.getWidth()) / 2);
+                primaryStage.setY((primScreenBounds.getHeight() - primaryStage.getHeight()) / 2);
+            }
+        });
+        
+        GridPane gridPane = new GridPane();
+        gridPane.add(shoot, 0, 0);
+        gridPane.add(withoutPhysics, 0, 1);
+        gridPane.add(quit, 1, 0);
+        
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setHalignment(withoutPhysics, HPos.CENTER);
+        gridPane.setHgap(7.5);
+        gridPane.setVgap(20);
+        
+        add(gridPane, 1, 0);
         add(force(), 0, 0);
+        
         setHgap(20);
+        setVgap(20);
         setAlignment(Pos.CENTER);
         setBackground(new Background(new BackgroundFill(Color.rgb(186, 216, 227), CornerRadii.EMPTY, new Insets(15, 15, 15, 15))));
         
@@ -141,14 +183,12 @@ public class GameMenu extends GridPane{
         velocity.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
-                // set force of ball to the force it will be hit with
                 velocityValue.textProperty().setValue(
                         String.valueOf("Velocity Selected: " + (int) velocity.getValue()));
             }
         });
 
-
-        //Angle text and slider:
+       
         Label angleText = new Label("Specify Angle:");
         angleText.setFont(new Font("Arial", 20));
 
@@ -172,18 +212,19 @@ public class GameMenu extends GridPane{
         angle.valueProperty().addListener(new ChangeListener<Number>() {
             public void changed(ObservableValue<? extends Number> ov,
                                 Number old_val, Number new_val) {
-                // set angle of ball to the angle it will be hit with
                 angleValue.textProperty().setValue(
                         String.valueOf("Angle Selected: " + (int) angle.getValue() + "°"));
                 double LineEndX = graph.LineRotateX*Math.cos(Math.toRadians(-angle.getValue())) - graph.LineRotateZ*Math.sin(Math.toRadians(-angle.getValue()));
                 double LineEndZ = graph.LineRotateZ*Math.cos(Math.toRadians(-angle.getValue())) + graph.LineRotateX*Math.sin(Math.toRadians(-angle.getValue()));
-                //System.out.println(LineEndX + " " + LineEndZ);
-                graph.setCoordinates(LineEndX, LineEndZ);
+                graph.setCoordinatesLine(LineEndX, LineEndZ);
             }
         });
         
         return pane;
     }
+    /**
+     * @param graph instance of Graph3D
+     */
     public void setGraph(Graph3D graph){
         this.graph = graph;
     }

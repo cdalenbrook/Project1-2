@@ -1,6 +1,5 @@
 package minigolf;
 
-import Setup.DataReader;
 import Menu.StartMenu;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
@@ -18,14 +17,13 @@ import javafx.stage.Stage;
 /**
  * This is the main class, with which we start the Application.
  * @author Jordan
- * @version 1.1
+ * @version 1.3
  * @date 20.03
  */
 public class Main extends Application {
-    private static Stage primaryStage;
+    public static Stage primaryStage;
     /**
-     * Creates an instance of MapDrawer and OptionsPane, then they are being added to
-     * the scene, used by the primaryStage.
+     * Create an instance of StartMenu and run the application.
      * @param primaryStage primaryStage being visualised
      */
     @Override
@@ -50,11 +48,12 @@ public class Main extends Application {
         
         primaryStage.show();
     }
+    /**
+     * Run the application.
+     * @param args 
+     */
     public static void main(String[] args) {
         launch(args);
-    }
-    public static Stage getStage(){
-        return primaryStage;
     }
 }
 

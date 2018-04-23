@@ -1,6 +1,5 @@
-/* package Physics;
+package Physics;
 
-import Graphics.Game2D;
 
 
 
@@ -16,14 +15,11 @@ public class Physics{
   public static double gravity = -9.81;
   public static double slopeAngleX = 0, slopeAngleY = 0;
   public static double leg;
-
-  public static Game2D game;
   public static PhysicsTimer timerlistener;
 
-  public Physics(double totalVelocity, double angle, Game2D game){
+  public Physics(double totalVelocity, double angle){
       this.totalVelocity = totalVelocity;
       this.angle = -angle;
-      this.game = game;
 
   }
     public void startMoving(){
@@ -32,7 +28,7 @@ public class Physics{
         zCoordinate = 0;
         System.out.println("TOTAL VELOCITY = " + totalVelocity + "m/s");
         System.out.println("ANGLE OF SHOT = " + angle + "Â°");
-        timerlistener = new PhysicsTimer(totalVelocity, angle, game);
+        timerlistener = new PhysicsTimer(totalVelocity, angle);
         zVelocity= (totalVelocity*Math.sin(timerlistener.getSlopeAngle(timerlistener.getXSlope(xCoordinate))) + totalVelocity*Math.sin(timerlistener.getSlopeAngle(timerlistener.getYSlope(yCoordinate))));
         leg=Math.sqrt((totalVelocity*totalVelocity)-(zVelocity*zVelocity));
         xVelocity=leg*Math.sin(angle);
@@ -46,4 +42,4 @@ public class Physics{
       timerlistener.stop();
   }
 
-} */
+}

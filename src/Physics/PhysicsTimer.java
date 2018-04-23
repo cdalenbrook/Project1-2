@@ -1,6 +1,6 @@
-/* package Physics;
+package Physics;
 //import java.util.Scanner;
-import Graphics.Game2D;
+import Graphics.Graph3D;
 import java.util.Timer;
 //import javax.swing.event.*;
 //import java.awt.*;
@@ -17,22 +17,15 @@ public class PhysicsTimer extends Physics{
 
   Timer timer = new Timer();
   TimerTask task = new TimerTask(){ 
+    @Override
     public void run(){
 
-        slopeAngleX = getSlopeAngle(getXSlope(xCoordinate));
-        slopeAngleY = getSlopeAngle(getYSlope(yCoordinate));
+      slopeAngleX = getSlopeAngle(getXSlope(xCoordinate));
+      slopeAngleY = getSlopeAngle(getYSlope(yCoordinate));
 
-       game.getBall().setCenterX(game.getBall().getCenterX() - xCoordinate*game.getAmplification());
-       game.getBall().setCenterY(game.getBall().getCenterY() - yCoordinate*game.getAmplification());
+       
+      Graph3D.moveBall(xCoordinate, zCoordinate, yCoordinate);
 
-      System.out.println("X Coordinate = " + xCoordinate);
-      System.out.println("Y Coordinate: " + yCoordinate);
-      System.out.println("Z Coordinate: " + zCoordinate);
-      System.out.println("X VELOCITY = " + xVelocity);
-      System.out.println("Y VELOCITY = " + yVelocity);
-      System.out.println("Z VELOCITY = " + zVelocity);
-
-      System.out.println("");
       gravityForceOnBallX = (gravity*MASS_OF_BALL)*Math.sin(slopeAngleX);
       gravityForceOnBallY = (gravity*MASS_OF_BALL)*Math.sin(slopeAngleY);
       //gravityForceOnX = gravityForceOnBallX;
@@ -60,8 +53,8 @@ public class PhysicsTimer extends Physics{
     }
   };
 
-   public PhysicsTimer(double totalVelocity, double angle, Game2D game) {
-        super(totalVelocity, angle, game);
+   public PhysicsTimer(double totalVelocity, double angle) {
+        super(totalVelocity, angle);
    }
 
 
@@ -88,4 +81,4 @@ public class PhysicsTimer extends Physics{
       timer.cancel();
   }
   
-} */
+}

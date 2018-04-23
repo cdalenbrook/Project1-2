@@ -1,7 +1,6 @@
 package Graphics;
 
 import javafx.event.EventHandler;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 /**
  * This class controls the camera with keys
@@ -11,8 +10,6 @@ import javafx.scene.input.KeyEvent;
  */
 public class CameraController implements EventHandler<KeyEvent>{
     private Graph3D map;
-    
-    private double zoom = 0;
     /**
      * Constructor takes as a parameter the MapDrawer so it can call methods in it
      * @param map an instance of MapDrawer
@@ -26,46 +23,20 @@ public class CameraController implements EventHandler<KeyEvent>{
      */
     @Override
     public void handle(KeyEvent event){
-        if(event.getCode() == KeyCode.RIGHT){
-            map.rotateY(10);
-        }
-        else if(event.getCode() == KeyCode.LEFT){
-            map.rotateY(-10);
-        }
-        else if(event.getCode() == KeyCode.UP){
-            map.rotateX(10);
-        }
-        else if(event.getCode() == KeyCode.DOWN){
-            map.rotateX(-10);
-        }
-        else if(event.getCode() == KeyCode.Z){
-            map.rotateZ(10);
-        }
-        else if(event.getCode() == KeyCode.X){
-            map.rotateZ(-10);
-        }
-        else if(event.getCode() == KeyCode.N){
-            zoom+= 1;
-            map.CameraZoom(+1);
-        }
-        else if(event.getCode() == KeyCode.M){
-            zoom-= 1;
-            map.CameraZoom(-1);
-        }
-        else if(event.getCode() == KeyCode.P){
-            map.print();
-        }
-        else if(event.getCode() == KeyCode.C){
-            map.CameraY(1);
-        }
-        else if(event.getCode() == KeyCode.V){
-            map.CameraY(-1);
-        }
-        else if(event.getCode() == KeyCode.H){
-            map.CameraX(1);
-        }
-        else if(event.getCode() == KeyCode.J){
-            map.CameraX(-1);
+        switch(event.getCode()){
+            case RIGHT: map.CameraX(0.5); break;
+            case LEFT: map.CameraX(-0.5); break;
+            case UP: map.CameraY(-0.5); break;
+            case DOWN: map.CameraY(0.5); break;
+            case Z: map.CameraZ(0.5); break;
+            case X: map.CameraZ(-0.5); break;
+            case P: map.print(); break;
+            case W: map.rotateX(5); break;
+            case S: map.rotateX(-5); break;
+            case A: map.rotateY(-5); break;
+            case D: map.rotateY(5); break;
+            case Q: map.rotateZ(5); break;
+            case E: map.rotateZ(-5); break;
         }
     }    
 }

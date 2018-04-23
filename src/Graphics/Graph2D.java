@@ -1,54 +1,73 @@
 package Graphics;
 
-import Setup.DataReader;
 import Setup.Function;
-import Setup.FunctionType;
+import Setup.ImageType;
 import Setup.Level;
+import javafx.geometry.Point2D;
 import javafx.scene.image.PixelWriter;
 import javafx.scene.image.WritableImage;
 import javafx.scene.paint.Color;
 
 /**
- * This class takes the input function and creates heat-map-like a graph of it
+ * This class takes the input function and creates an image representing it
  * @author Jordan
  * @version 1.0
  * @date 20.03
  */
 public class Graph2D {
     private WritableImage image;
-    public Graph2D(int level, FunctionType functionType, Function function){
-        Level data = DataReader.getData().get(level);
+    
+    /**
+     *  Constructor
+     * @param level instance of Level
+     * @param imageType the way we want to draw the image
+     * @param function instance of function with data for the height
+     */
+    public Graph2D(Level level, ImageType imageType, Function function){
+        Level data = level;
         double startX = data.getRangeX()[0];
         double endX = data.getRangeX()[1];
         double startZ = data.getRangeY()[0];
         double endZ = data.getRangeY()[1];
         
         int amplification = 0;
-        switch(functionType){
+        switch(imageType){
             case BUTTON: amplification = (int)(200/(endX - startX)); break;
             case GRAPH: amplification = (int)(400/(endX - startX)); break;
             case IMAGE: amplification = (int)(600/(endX - startX)); break;
+            case LEVELCREATIONMAP: amplification = (int)(600/(endX - startX)); break;
         }
-        int xMin = (int)startX*amplification;
-        int xMax = (int)endX*amplification;
-        int zMin = (int)startZ*amplification;
-        int zMax = (int)endZ*amplification;
+        int StartX = (int)startX*amplification;
+        int EndX = (int)endX*amplification;
+        int StartZ = (int)startZ*amplification;
+        int EndZ = (int)endZ*amplification;
         
-        int xRange = xMax - xMin;
-        int zRange = zMax - zMin;
+        int RangeX = EndX - StartX;
+        int RangeZ = EndZ - StartZ;
         
-        image = new WritableImage(xRange, zRange);
+        Point2D goal = new Point2D(data.getGoal()[0]*amplification, data.getGoal()[1]*amplification);
+        
+        int goalRadius = amplification/15;
+        int sandRadius = amplification/8;
+        int treeRadius = amplification/32;
+        
+        image = new WritableImage(RangeX, RangeZ);
         PixelWriter pw = image.getPixelWriter();
-        for (int x = xMin; x < xMax; x++) {
-            for (int z = zMin; z < zMax; z++) {
+        for (int x = StartX; x < EndX; x++) {
+            for (int z = StartZ; z < EndZ; z++) {
 
-                float height = function.getHeight()[xRange + x - xMax][zRange + z - zMax];
+                float height = function.getHeight()[RangeX + x - EndX][RangeZ + z - EndZ];
                 
                 float min = function.getMin();
                 float max = function.getMax();
                 
+                Point2D point = new Point2D(x, z);
+                
                 Color color;
-                if(height < 0){
+                if(point.distance(goal) <= goalRadius){
+                    color = Color.RED;
+                }
+                else if(height < 0){
                     double newHeight;
                     if(min < -1){
                         newHeight = normalizeValue(height, min, 0, 0., 1.);
@@ -62,30 +81,46 @@ public class Graph2D {
                 else{
                     double newHeight = normalizeValue(height, 0, max, 0., 1.);
                     color = Color.DARKGREEN.interpolate(Color.CHARTREUSE, newHeight);
-                    //color = Color.color(0, 102, 51).interpolate(Color.color(178, 255, 102), newHeight);
-
-                    
+                    //color = Color.color(0, 102, 51).interpolate(Color.color(178, 255, 102), newHeight);  
                 }
-                pw.setColor(x + xRange - xMax, z + zRange - zMax, color);
+                
+                for(double[] sand: level.getSand()){
+                    Point2D Sand = new Point2D(sand[0]*amplification, sand[1]*amplification);
+                    if(point.distance(Sand) <= sandRadius && !color.equals(Color.RED)){
+                        color = Color.SANDYBROWN;
+                    }
+                }
+                if(imageType == ImageType.BUTTON){
+                    for(double[] tree: level.getTree()){
+                    Point2D Tree = new Point2D(tree[0]*amplification, tree[1]*amplification);
+                    if(point.distance(Tree) <= treeRadius && !color.equals(Color.RED)){
+                        color = Color.BROWN;
+                    }
+                }
+                }
+                
+                pw.setColor(x + RangeX - EndX, z + RangeZ - EndZ, color);
             }
         }
     }    
-    public Graph2D(int xmin, int xmax, int zmin, int zmax, int amplification, Function function){
+    
+    //test
+    public Graph2D(int startX, int endX, int startZ, int endZ, int amplification, Function function){
         
-        int xMin = xmin*amplification;
-        int xMax = xmax*amplification;
-        int zMin = zmin*amplification;
-        int zMax = zmax*amplification;
+        int StartX = startX*amplification;
+        int EndX = endX*amplification;
+        int StartZ = startZ*amplification;
+        int EndZ = endZ*amplification;
         
-        int xRange = xMax - xMin;
-        int zRange = zMax - zMin;
+        int RangeX = EndX - StartX;
+        int RangeZ = EndZ - StartZ;
         
-        image = new WritableImage(xRange, zRange);
+        image = new WritableImage(RangeX, RangeZ);
         PixelWriter pw = image.getPixelWriter();
-        for (int x = xMin; x < xMax; x++) {
-            for (int z = zMin; z < zMax; z++) {
+        for (int x = StartX; x < EndX; x++) {
+            for (int z = StartZ; z < EndZ; z++) {
 
-                float height = function.getHeight()[xRange + x - xMax][zRange + z - zMax];
+                float height = function.getHeight()[RangeX + x - EndX][RangeZ + z - EndZ];
                 
                 float min = function.getMin();
                 float max = function.getMax();
@@ -109,7 +144,7 @@ public class Graph2D {
 
                     
                 }
-                pw.setColor(x + xRange - xMax, z + zRange - zMax, color);
+                pw.setColor(x + RangeX - EndX, z + RangeZ - EndZ, color);
             }
         }
     }
