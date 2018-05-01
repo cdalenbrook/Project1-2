@@ -51,7 +51,7 @@ public class DataMenu extends VBox{
         Level level = new Level();
         draw();
         
-        Function.setText("0.1x 0.03pow(x,2) 0.2y");
+        Function.setText("(0.1*x) + (0.03*(x^2)) + (0.2*y)");
         RangeX.setText("-2, 2");
         RangeY.setText("-2, 2");
         Ball.setText("0, 0");
@@ -216,7 +216,7 @@ public class DataMenu extends VBox{
     public DataMenu(BorderPane pane, Scene scene, GameMenu options){
         draw();
         
-        Function.setText("0.1x 0.03pow(x,2) 0.2y");
+        Function.setText("(0.1*x) + (0.03*(x^2)) + (0.2*y)");
         RangeX.setText("-2, 2");
         RangeY.setText("-2, 2");
         Amplification.setText("50, 100");

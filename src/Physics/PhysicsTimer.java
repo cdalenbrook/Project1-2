@@ -20,8 +20,8 @@ public class PhysicsTimer extends Physics{
         slopeAngleX = getSlopeAngle(getXSlope(xCoordinate, yCoordinate));
         slopeAngleY = getSlopeAngle(getYSlope(xCoordinate, yCoordinate));   
         
-        Graph3D.moveBall(xCoordinate, zCoordinate, yCoordinate);
-
+      Graph3D.moveBall(xCoordinate, zCoordinate, yCoordinate);
+        
       System.out.println("X Coordinate = " + xCoordinate);
       System.out.println("Y Coordinate: " + yCoordinate);
       System.out.println("Z Coordinate: " + zCoordinate);

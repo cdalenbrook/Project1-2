@@ -8,9 +8,6 @@ import java.util.ArrayList;
  * @author Jordan
  */
 public class Function{
-    private double X;
-    private double Z;
-    
     private float[][] height;
     private float maxValue;
     private float minValue;
@@ -47,7 +44,7 @@ public class Function{
         int EndZ = (int)endZ*amplification;
         for (int x = StartX; x < EndX; x++){
             for (int z = StartZ; z < EndZ; z++) {
-                height[rangeX + x - EndX][rangeZ + z - EndZ] = (float)calculate(data.getFunction(), x/(double)amplification, z/(double)amplification);
+                height[rangeX + x - EndX][rangeZ + z - EndZ] = (float)Calculator.findZ(data.getFunction(), x/(double)amplification, z/(double)amplification);
             }
         }
         findMax();
@@ -67,7 +64,7 @@ public class Function{
         
         for (int x = StartX; x < EndX; x++){
             for (int z = StartZ; z < EndZ; z++) {
-                height[rangeX + x - EndX][rangeZ + z - EndZ] = (float)calculate(functionData, x/(double)amplification, z/(double)amplification);
+                height[rangeX + x - EndX][rangeZ + z - EndZ] = (float)Calculator.findZ(functionData, x/(double)amplification, z/(double)amplification);
              }
         }
         findMax();
@@ -128,7 +125,7 @@ public class Function{
      * @param Y value of x
      * @return height/z
      */
-    private double calculate(ArrayList<char[]> function, double X, double Z){
+    /* private double calculate(ArrayList<char[]> function, double X, double Z){
         this.X = X;
         this.Z = Z;
         double height = 0;
@@ -143,7 +140,7 @@ public class Function{
      * @param data char array representing part of a function
      * @return char array with variable parts
      */
-    private double calculate1(char[] data){
+    /* private double calculate1(char[] data){
         int counter = 0;
         for(int i = 0; i < data.length; i++){
             char b = data[i];
@@ -164,7 +161,7 @@ public class Function{
      * @param data char array representing part of a function
      * @return double with value
      */
-    private double calculate2(char[] data){
+   /* private double calculate2(char[] data){
         switch(new String(data).trim()){
             case "x": return X;
             case "y": return Z;
@@ -217,7 +214,7 @@ public class Function{
      * @param data char array to read from
      * @return double as value
      */
-    private double getMultiplier(char[] data){
+   /* private double getMultiplier(char[] data){
         ArrayList<Character> list = new ArrayList<>();
         for(char b: data){
            if(Character.isDigit(b) || b == '/' || b == '.' || b == '-'){
@@ -254,5 +251,5 @@ public class Function{
             double BB = Double.parseDouble(B.trim());
             return AA/BB;
         }
-    }
+    }*/
 }

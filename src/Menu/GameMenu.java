@@ -55,8 +55,8 @@ public class GameMenu extends GridPane{
             @Override
             public void handle(ActionEvent e){
                 Timeline timeline = new Timeline();
-                Physics physics = new Physics(velocity.getValue(), angle.getValue());
                 if(!withoutPhysics.isSelected()){
+                    Physics physics = new Physics(velocity.getValue(), angle.getValue());
                     physics.startMoving();
                 }
                 else{
